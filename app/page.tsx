@@ -1,6 +1,5 @@
 import Image from "next/image";
 import {montserrat} from '@/app/ui/fonts'
-import { PowerIcon, NumberedListIcon } from '@heroicons/react/24/outline'
 import Listnum from "./ui/listnum";
 
 export default function Home() {
