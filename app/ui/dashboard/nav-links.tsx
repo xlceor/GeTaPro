@@ -12,14 +12,31 @@ import clsx from 'clsx';
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: 'Home', href: '/dashboard', icon: HomeIcon },
+  { name: 'Inicio', href: '/dashboard', icon: HomeIcon },
   {
-    name: 'Proyects',
-    href: '/dashboard/proyects',
+    name: 'interdisciplinarios',
+    href: '/dashboard/interdisciplinares',
     icon: DocumentDuplicateIcon,
   },
-  { name: 'Asistant', href: '/dashboard/asistant', icon: UserGroupIcon },
+  { name: 'Asistente', href: '/dashboard/asistant', icon: UserGroupIcon },
 ];
+export const proyects = [
+  {
+    name: 'Proyecto 1', 
+    href: '/dashboard/proyects/Proyecto1', 
+    icon: HomeIcon
+  },
+  {
+    name: 'Proyecto2',
+    href: '/dashboard/proyects/Proyecto2',
+    icon: DocumentDuplicateIcon,
+  },
+  { 
+    name: 'Proyecto3', 
+    href: '/dashboard/proyects/Proyecto2', 
+    icon: UserGroupIcon 
+  },
+]
 
 export default function NavLinks() {
   const pathname = usePathname();
@@ -32,9 +49,9 @@ export default function NavLinks() {
             key={link.name}
             href={link.href}
             className={clsx(
-              'flex h-[48px] grow  rounded-md 0  text-sm font-medium before:p-2 before:h-[48px] before:rounded-l-lg before:mr-4 hover:bg-indigo-950 justify-start hover:text-violet-600 md:flex-none md:px-0',
+              'flex h-[48px] grow  rounded-md 0  text-sm font-medium before:p-2 before:h-[48px] before:rounded-l-lg before:mr-4 hover:bg-slate-100 justify-start hover:text-violet-600 md:flex-none md:px-0',
               {
-                'bg-indigo-950 text-violet-600 before:bg-violet-600': pathname === link.href,
+                'bg-slate-100 text-violet-600 before:bg-violet-600 shadow': pathname === link.href,
               },
             )}
           >

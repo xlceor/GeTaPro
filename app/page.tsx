@@ -39,7 +39,7 @@ export default function Home() {
             alt="Screenshots of the dashboard project showing desktop version"
           />
           <div className="w-full h-full flex flex-col justify-around p-10 font-bold">
-            <h1 className={`${montserrat.className} text-transparent bg-clip-text bg-gradient-to-br from-violet-500  to-teal-300 to-80% text-5xl`}>Objetivos del Proyecto</h1>
+            <h1 className={`${montserrat.className} text-transparent bg-clip-text bg-gradient-to-r from-violet-500  to-teal-300 to-80% text-5xl`}>Objetivos del Proyecto</h1>
             <div className="grid grid-cols-2 w-full h-2/4">
             <li className=""><Listnum num={1}/></li>
             <li className=""></li>
@@ -47,6 +47,7 @@ export default function Home() {
             <li className=""></li>
             </div>
           </div>
+          
           </div>
         </div>
       </main>
