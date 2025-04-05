@@ -8,8 +8,8 @@ import { useState } from 'react';
 export default function SideNav({ children }: { children: React.ReactNode }) {
   const [first, setfirst] = useState(false)
   return (
-    <div className="flex flex-col w-full h-full">
-      <div className="flex w-full h-16 shadow bg-white fixed">
+    <div className="flex flex-col w-full h-max overflow-hidden min-h-max">
+      <div className="flex w-full h-16 z-20 shadow bg-white fixed">
         <Link
             className="mb-2 flex h-full items-end justify-start bg-gradient-to-br from-violet-500 via-[#6f8cf6] to-[#51a5ff] p-4 w-64"
             href="/"
@@ -20,7 +20,7 @@ export default function SideNav({ children }: { children: React.ReactNode }) {
         </Link>
       </div>
       <div className="h-16 w-full flex p-2"></div>
-      <div className="flex w-full h-full">
+      <div className="flex w-full  h-max">
         <div className="flex flex-col px-3 fixed py-4 md:px-2 bg-slate-300 p-5  flex-none md:w-64 h-full">
           <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
             <NavLinks />
@@ -33,8 +33,8 @@ export default function SideNav({ children }: { children: React.ReactNode }) {
             </form>
           </div>
         </div>
-        <div className="md:w-64"></div>
-        <div className="flex-grow p-6 md:overflow-y-auto md:p-10 md:py-2">{children}</div>
+        <div className="md:w-[20rem]"></div>
+        <div className="flex w-full h-max flex-grow scrollbar-hide   p-6 overflow-auto md:p-10 md:py-2">{children}</div>
       </div>
     </div>
   );

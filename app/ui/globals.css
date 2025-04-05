@@ -13,7 +13,14 @@
     --foreground: #ededed;
   }
 } */
-
+/* Scroll invisible pero funcional */
+.scroll-hidden::-webkit-scrollbar {
+  display: none;
+}
+.scroll-hidden {
+  -ms-overflow-style: none;  /* IE y Edge */
+  scrollbar-width: none;     /* Firefox */
+}
 body {
   color: var(--foreground);
   background: var(--background);
