@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import NavLinks from '@/app/ui/dashboard/nav-links';
 import { PowerIcon } from '@heroicons/react/24/outline';
-import { useState } from 'react';
 
 export default function SideNav({ children }: { children: React.ReactNode }) {
   return (
