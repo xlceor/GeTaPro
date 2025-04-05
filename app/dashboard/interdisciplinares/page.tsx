@@ -1,7 +1,6 @@
 'use client';
 import CapitulosNav from './chaptersNav';
 import { useState, useEffect } from 'react';
-import { lusitana } from '@/app/ui/fonts';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
