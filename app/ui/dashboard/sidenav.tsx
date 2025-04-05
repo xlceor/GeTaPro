@@ -6,7 +6,6 @@ import { PowerIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 
 export default function SideNav({ children }: { children: React.ReactNode }) {
-  const [first, setfirst] = useState(false)
   return (
     <div className="flex flex-col w-full h-max overflow-hidden min-h-max">
       <div className="flex w-full h-16 z-20 shadow bg-white fixed">

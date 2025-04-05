@@ -1,5 +1,4 @@
 'use client';
-import CapitulosNav from './chaptersNav';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -11,7 +10,7 @@ import Chapter4 from './chapter4';
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 {/* <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>inter</h1> */}
-export default function page() {
+export default function Page() {
     const [capitulo, setCapitulo] = useState(1);
 
     const renderizarCapitulo = () => {
@@ -33,7 +32,6 @@ export default function page() {
         const [animatedValue, setAnimatedValue] = useState(0);
 
         useEffect(() => {
-            let start = 0;
             const duration = 300;
             const startTime = performance.now();
 
