@@ -1,10 +1,11 @@
 import Image from "next/image";
 import {montserrat} from '@/app/ui/fonts'
 import Listnum from "./ui/listnum";
+import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className=" flex-col flex items-center  justify-between w-full h-full min-h-screen p-8 pb-0 gap-16 ">
+    <div className=" flex-col flex items-center  justify-between w-full bg-gray-900 text-white h-full min-h-screen p-8 pb-0 gap-16 ">
       {/**font-[family-name:var(--font-geist-sans)] */}
       <main className="flex flex-col gap-8 row-start-2 w-full h-full min-h-[200%] items-center justify-center mx-auto sm:items-start">
         <div className="flex h-dvh w-full justify-center items-center">
@@ -18,14 +19,23 @@ export default function Home() {
           />
           <div className="w-full h-full flex flex-col justify-around p-10 font-bold">
             <h1 className={`${montserrat.className} text-transparent bg-clip-text bg-gradient-to-br from-violet-500  to-teal-300 to-80% text-5xl`}>GeTaPro: Una Aplicación de Gestión de Tareas Basada en IA para Proyectos Escolares</h1>
-            <div className="grid grid-cols-2 w-2/3">
+            {/* <div className="grid grid-cols-2 w-2/3">
               <li>Carlos Osorio</li>
               <li>Fernanda Garcia</li>
               <li>Natalia Estefania</li>
               <li>Oraria Dominges</li>
               <li>Valentin Herrera</li>
               <li>Julieta Alvarado</li>
+            </div> */}
+                      <Link
+            href={"/dashboard"}
+            className="p-6 bg-violet-600"
+          >
+            <div className='flex items-center gap-2  justify-center '>
+                <p className="hidden md:block md:w-10">Enter</p>
             </div>
+          </Link>
+            
           </div>
           </div>
         </div>
