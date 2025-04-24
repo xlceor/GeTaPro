@@ -25,6 +25,10 @@ export async function createUser(id: string, name: string, photoUrl: string) {
 type Section = { name: string; text: string };
 type Project = {
   id: string;
+  name: string;
+  description: string;
+  files: string[];
+  created_at: string;
   chapter1: Record<string, Section>;
   chapter2: Record<string, Section>;
   chapter3: Record<string, Section>;
@@ -35,10 +39,20 @@ function createEmptySection(name: string): Section {
   return { name, text: '' };
 }
 
-export function createMockProject(): Project {
+export async function createProject(
+  userId: string,
+  name: string,
+  description: string
+) {
   const id = uuidv4();
-  return {
+  const created_at = new Date().toISOString();
+
+  const project: Project = {
     id,
+    name,
+    description,
+    files: [],  // Inicialmente vacío
+    created_at,
     chapter1: {
       problem_statement: createEmptySection('Problem Statement'),
       research_objectives: createEmptySection('Research Objectives'),
@@ -66,6 +80,18 @@ export function createMockProject(): Project {
       bibliography: createEmptySection('Bibliography')
     }
   };
+
+  // Guardar el proyecto en la base de datos
+  const { data, error } = await supabase.rpc('append_project', {
+    uid: userId,
+    new_project: project
+  });
+
+  if (error) {
+    throw new Error(`Error creando el proyecto para el usuario ${userId}: ${error.message}`);
+  }
+
+  return data;
 }
 
 export async function addProjectToUser(userId: string, project: Project) {

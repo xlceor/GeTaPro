@@ -3,10 +3,10 @@
 import Link from 'next/link';
 import NavLinks from '@/app/ui/dashboard/nav-links';
 import { useLogged } from '@/app/hooks/useLogged';
-import { PowerIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 
 export default function SideNav({ children }: { children: React.ReactNode }) {
-  const {handleSignOut } = useLogged();
+  const {user, handleSignOut } = useLogged();
   return (
     <div className="flex flex-col w-full h-max overflow-hidden min-h-max">
       <div className="flex w-full h-16 z-20 shadow bg-white fixed">
@@ -21,20 +21,27 @@ export default function SideNav({ children }: { children: React.ReactNode }) {
       </div>
       <div className="h-16 w-full flex p-2"></div>
       <div className="flex w-full  h-max">
-        <div className="flex flex-col px-3 fixed py-4 md:px-2 bg-slate-300 p-5  flex-none md:w-64 h-full">
+        <div className="flex flex-col px-3 fixed  md:px-2 bg-slate-300 p-5  flex-none md:w-64 h-[91%]">
           <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
             <NavLinks />
             <div className="hidden h-auto w-full grow rounded-md md:block"></div>
-            <form>
-              <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md p-3 text-sm font-medium hover:bg-violet-950 hover:text-red-600 md:flex-none md:justify-start md:p-2 md:px-3">
-                <PowerIcon className="w-6" />
-                <div className="hidden md:block"            
-                onClick={handleSignOut} // Botón de cerrar sesión
-                  >
-                    Cerrar sesión 
-                    </div>
-              </button>
-            </form>
+            <form onSubmit={handleSignOut}>
+  <button
+    type="submit"
+    className="flex h-[48px] w-full items-center justify-center gap-2 rounded-md p-3 text-sm font-medium hover:bg-violet-400 hover:text-white"
+  >
+    {user && (
+      <Image
+        src={user.photoUrl}
+        alt={user.name || 'Usuario'}
+        className="rounded-full w-10 h-10"
+        width={100}
+        height={100}
+      />
+    )}
+    <span>Cerrar sesión</span>
+  </button>
+</form>
           </div>
         </div>
         <div className="md:w-[20rem]"></div>

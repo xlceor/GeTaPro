@@ -1,3 +1,6 @@
+//app/login/page.tsx
+
+
 'use client';
 
 import { useSession, signIn, signOut } from 'next-auth/react';
@@ -6,6 +9,7 @@ import Image from 'next/image';
 export default function LoginPage() {
   const { data: session } = useSession();
   const user = session?.user;
+  console.log("Iniciando inicio")
 
   return (
     <div className="flex justify-center items-center h-screen">

@@ -6,6 +6,8 @@ import type { User } from 'next-auth';
 import type { Session } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
 
+console.log("iniciandooooo")
+
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
@@ -16,7 +18,9 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async signIn({ user }: { user: User }) {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/add-user`, {
+        console.log("Preparandoseeeeee" + process.env.NEXTAUTH_URL!)
+
+      const res = await fetch(`${process.env.NEXTAUTH_URL}/api/create-user`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user),
