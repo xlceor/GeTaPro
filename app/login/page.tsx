@@ -5,11 +5,26 @@
 
 import { useSession, signIn, signOut } from 'next-auth/react';
 import Image from 'next/image';
+import { useEffect } from 'react';
 
 export default function LoginPage() {
   const { data: session } = useSession();
   const user = session?.user;
   console.log("Iniciando inicio")
+
+  useEffect(() => {
+    if (user) {
+      // Crear usuario si no existe
+      fetch('/api/create-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user),
+      }).then(() => {
+        // Redirigir al dashboard
+        window.location.href = '/dashboard';
+      });
+    }
+  }, [user]);
 
   return (
     <div className="flex justify-center items-center h-screen">
