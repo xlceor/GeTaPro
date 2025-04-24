@@ -2,9 +2,11 @@
 
 import Link from 'next/link';
 import NavLinks from '@/app/ui/dashboard/nav-links';
+import { useLogged } from '@/app/hooks/useLogged';
 import { PowerIcon } from '@heroicons/react/24/outline';
 
 export default function SideNav({ children }: { children: React.ReactNode }) {
+  const {handleSignOut } = useLogged();
   return (
     <div className="flex flex-col w-full h-max overflow-hidden min-h-max">
       <div className="flex w-full h-16 z-20 shadow bg-white fixed">
@@ -26,7 +28,11 @@ export default function SideNav({ children }: { children: React.ReactNode }) {
             <form>
               <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md p-3 text-sm font-medium hover:bg-violet-950 hover:text-red-600 md:flex-none md:justify-start md:p-2 md:px-3">
                 <PowerIcon className="w-6" />
-                <div className="hidden md:block">Sign Out</div>
+                <div className="hidden md:block"            
+                onClick={handleSignOut} // Botón de cerrar sesión
+                  >
+                    Cerrar sesión 
+                    </div>
               </button>
             </form>
           </div>

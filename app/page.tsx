@@ -28,14 +28,17 @@ export default function Home() {
               <li>Julieta Alvarado</li>
             </div> */}
                       <Link
-            href={"/dashboard"}
+            href={"/login"}
             className="p-6 bg-violet-600"
           >
             <div className='flex items-center gap-2  justify-center '>
                 <p className="hidden md:block md:w-10">Enter</p>
             </div>
           </Link>
-            
+            <div>
+              <div>Info</div>
+              <div></div>
+            </div>
           </div>
           </div>
         </div>

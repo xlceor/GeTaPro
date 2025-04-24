@@ -1,7 +1,11 @@
-import type { NextConfig } from "next";
+import path from 'path';
+import { Config } from 'tailwindcss';
 
-const nextConfig: NextConfig = {
-  /* config options here */
+const nextConfig = {
+  webpack(config: Config) {
+    config.resolve.alias['@'] = path.join(__dirname, '/');
+    return config;
+  },
 };
 
 export default nextConfig;

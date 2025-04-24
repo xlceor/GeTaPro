@@ -10,15 +10,23 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@supabase/supabase-js": "^2.49.4",
+    "@tiptap/react": "^2.11.7",
+    "@tiptap/starter-kit": "^2.11.7",
+    "@types/pg": "^8.11.11",
+    "@vercel/postgres": "^0.10.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.6.3",
     "google-fonts": "^1.0.0",
     "heroicons": "^2.2.0",
     "next": "15.1.6",
+    "next-auth": "4.24.11",
+    "pg": "^8.14.1",
     "react": "^19.0.0",
     "react-circular-progressbar": "^2.2.0",
     "react-dom": "^19.0.0",
-    "tailwind-scrollbar-hide": "^2.0.0"
+    "tailwind-scrollbar-hide": "^2.0.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

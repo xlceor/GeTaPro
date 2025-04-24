@@ -1,0 +1,84 @@
+{
+  "chapters": {
+    "chapter1": {
+      "problem_statement": {
+        "name": "Planteamiento del problema",
+        "text": "¿Por qué es relevante esta investigación?"
+      },
+      "research_objectives": {
+        "name": "Objetivos de investigación",
+        "text": "¿Qué se pretende lograr?"
+      },
+      "research_justification": {
+        "name": "Justificación de la investigación",
+        "text": "¿Por qué es importante?"
+      },
+      "hypothesis": {
+        "name": "Hipótesis o supuestos de la investigación",
+        "text": "¿Qué esperamos encontrar?"
+      }
+    },
+    "chapter2": {
+      "research_background": {
+        "name": "Antecedentes de la investigación",
+        "text": "Un recorrido por estudios previos que abordan el mismo problema."
+      },
+      "international_background": {
+        "name": "Antecedentes internacionales",
+        "text": "¿Cómo se ha tratado este tema en el mundo?"
+      },
+      "national_background": {
+        "name": "Antecedentes nacionales",
+        "text": "¿Cuál es la situación en nuestro país?"
+      },
+      "state_background": {
+        "name": "Antecedentes estatales",
+        "text": "Un enfoque más localizado y específico."
+      }
+    },
+    "chapter3": {
+      "research_paradigm": {
+        "name": "Paradigma de la investigación",
+        "text": "¿Desde qué enfoque abordamos el problema?"
+      },
+      "research_method": {
+        "name": "Método de investigación",
+        "text": "¿Cómo vamos a obtener la información necesaria?"
+      },
+      "research_type": {
+        "name": "Tipo de investigación",
+        "text": "Exploratoria, descriptiva, experimental… ¿Qué tipo de estudio realizaremos?"
+      },
+      "research_approach": {
+        "name": "Enfoque de investigación",
+        "text": "¿Cuantitativo, cualitativo o mixto?"
+      },
+      "population_sample": {
+        "name": "Población y muestra",
+        "text": "¿A quién estudiaremos y cómo seleccionaremos los datos?"
+      },
+      "scenarios_informants": {
+        "name": "Escenarios y sujetos informantes",
+        "text": "¿Dónde y con quién se realizará la investigación?"
+      },
+      "data_collection": {
+        "name": "Técnicas e instrumentos de recolección de datos",
+        "text": "¿Cuáles serán nuestras herramientas para obtener información?"
+      }
+    },
+    "chapter4": {
+      "conclusion": {
+        "name": "Conclusión",
+        "text": "Un resumen de lo aprendido y su impacto."
+      },
+      "recommendations": {
+        "name": "Recomendaciones",
+        "text": "Sugerencias para futuras investigaciones o aplicaciones prácticas."
+      },
+      "bibliography": {
+        "name": "Bibliografía",
+        "text": "Las fuentes que respaldan y enriquecen nuestro trabajo."
+      }
+    }
+  }
+}
