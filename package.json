@@ -12,6 +12,7 @@
     "@heroicons/react": "^2.2.0",
     "@supabase/supabase-js": "^2.49.4",
     "@tiptap/extension-heading": "^2.11.7",
+    "@tiptap/extension-placeholder": "^2.11.7",
     "@tiptap/react": "^2.11.7",
     "@tiptap/starter-kit": "^2.11.7",
     "@types/pg": "^8.11.11",

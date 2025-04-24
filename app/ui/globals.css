@@ -26,3 +26,9 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+.ProseMirror:focus {
+  outline: none !important;
+}
+.ProseMirror {
+  cursor: text;
+}

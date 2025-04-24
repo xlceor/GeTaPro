@@ -1,6 +1,7 @@
 import { useEditor, EditorContent, JSONContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Heading from '@tiptap/extension-heading';
+import Placeholder from '@tiptap/extension-placeholder';
 
 interface TextContent {
   type: "text";
@@ -15,8 +16,14 @@ interface UploadProps {
 
 export default function Modal({ content, setContent, onSave }: UploadProps) {
   const editor = useEditor({
-    extensions: [StarterKit, Heading.configure({ levels: [1, 2, 3] })], // Agregar soporte para títulos y subtítulos
-    content: content.text,
+    extensions: [
+      StarterKit,
+      Heading.configure({ levels: [1, 2, 3] }),
+      Placeholder.configure({
+        placeholder: 'Escribe algo interesante, digno de Stark Industries...',
+      }),
+    ],
+    content: content?.text?.content?.length ? content.text : '',
     onUpdate: ({ editor }) => {
       const json = editor.getJSON();
       setContent({ type: "text", text: json });
@@ -70,10 +77,19 @@ export default function Modal({ content, setContent, onSave }: UploadProps) {
           </div>
         </div>
 
-        <div className=" p-4 bg-white rounded-xl outline-none shadow-sm h-full">
-          <EditorContent editor={editor} className='outline-none' />
+        <div className="p-4 bg-white rounded-xl outline-none shadow-sm h-full">
+          <EditorContent editor={editor} className="h-full w-full outline-none" />
         </div>
       </div>
+      <style jsx global>{`
+        .ProseMirror p.is-empty::before {
+          content: attr(data-placeholder);
+          float: left;
+          color: #a0aec0;
+          pointer-events: none;
+          height: 0;
+        }
+      `}</style>
     </div>
   );
 }
