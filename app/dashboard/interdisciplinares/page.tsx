@@ -3,29 +3,83 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
-import Chapter1 from './chapter1';
-import Chapter2 from './chapter2';
-import Chapter3 from './chapter3';
-import Chapter4 from './chapter4';
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+// import { useLogged } from '@/app/hooks/useLogged';
+import Card from "@/app/ui/components/card";
 {/* <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>inter</h1> */}
+interface ChapterData {
+  [chapterKey: string]: {
+    [sectionKey: string]: {
+      name: string;
+      text: string;
+    };
+  };
+}
+
 export default function Page() {
     const [capitulo, setCapitulo] = useState(1);
+    const [chapterData, setChapterData] = useState<ChapterData | null>(null);
+    const titles: Record<string, { title: string; description: string }> = {
+        "chapter1": {
+            title: "Capítulo 1: El Problema",
+            description: "Cada gran descubrimiento comienza con una pregunta. Y cada pregunta surge de una inquietud, una necesidad o una observación del mundo que nos rodea. En este capítulo, exploraremos el problema central de nuestra investigación, estableciendo las bases para su análisis y solución. "
+        },
+        "chapter2": {
+            title: "Capítulo 2: Fundamentación o Contexto Teórico",
+            description: "Toda investigación se sostiene sobre el conocimiento previo. Antes de aventurarnos en nuevos hallazgos, debemos comprender qué se ha dicho y hecho en el pasado sobre nuestro tema. "
+        },
+        "chapter3": {
+            title: "Capítulo 3: Contexto Metodológico",
+            description: "Investigar sin un método es como navegar sin brújula. En este capítulo, se define el camino que seguiremos para obtener respuestas confiables y significativas."
+        },
+        "chapter4": {
+            title: "Capítulo 4: Análisis e Interpretación de Resultados",
+            description: "Los datos sin interpretación son solo números y palabras. En este capítulo, transformamos la información en conocimiento, dándole sentido a nuestros hallazgos."
+        }
+    };
+    const user  = "123";
+
+    useEffect(() => {
+      const fetchData = async () => {
+        const res = await fetch('/api/chapters');
+        const data = await res.json();
+        setChapterData(data.chapters);
+      };
+      fetchData();
+    }, []);
 
     const renderizarCapitulo = () => {
-        switch (capitulo) {
-            case 1:
-                return <Chapter1 />;
-            case 2:
-                return <Chapter2 />;
-            case 3:
-                return <Chapter3 />;
-            case 4:
-                return <Chapter4 />;
-            default:
-                return <p>Selecciona un capítulo</p>;
-        }
+      if (!chapterData || !user) return <p>Cargando...</p>;
+      const chapterKeys = Object.keys(chapterData);
+      const currentChapterKey = chapterKeys[capitulo - 1];
+      const currentChapter = chapterData[currentChapterKey];
+      const titleInfo = titles[currentChapterKey];
+      if (!titleInfo) {
+          console.warn("Clave inválida:", currentChapterKey);
+          return <p className="text-red-500">Este capítulo aún no ha sido creado, Señor.</p>;
+      }
+      
+      return (
+        <div>
+          <div className="flex flex-col w-full h-40 shadow items-center rounded-xl p-5 bg-white">
+            <h2 className="text-2xl font-bold">{titleInfo.title}</h2>
+            <p className="text-justify w-full">{titleInfo.description}</p>
+          </div>
+            <div className='wrapper grid grid-cols-2 gap-2 p-2 w-full h-max'>
+                {Object.entries(currentChapter).map(([sectionKey, section]) => (
+                    <Card
+                    key={sectionKey}
+                    userId={user}
+                    projectId="default"
+                    chapterKey={currentChapterKey}
+                    chapter={{ [sectionKey]: section }}
+                    prevContent={{ type: "text", text: { type: "doc", content: [] } }}
+                    />
+                ))}
+            </div>
+        </div>
+      );
     };
 
     const MyProgress = ({ percentage }: { percentage: number }) => {
@@ -61,7 +115,7 @@ export default function Page() {
         );
     };
     return( 
-        <div className='flex flex-col scroll-hidden scrollbar-hide w-full h-full'> {/*<--- Jarvis, aqui es */}
+        <div className='flex flex-col scroll-hidden scrollbar-hide w-full h-full'>
             <div className="head flex shadow bg-slate-100 w-full h-[13rem] border-violet-600 border-2 rounded-xl">
                 <div className="flex flex-col w-full gap-3 h-full justify-center items-center">
                     <h1 className="text-4xl font-bold">Nombre</h1>

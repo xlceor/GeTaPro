@@ -1,5 +1,6 @@
 import { useEditor, EditorContent, JSONContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import Heading from '@tiptap/extension-heading';
 
 interface TextContent {
   type: "text";
@@ -7,14 +8,14 @@ interface TextContent {
 }
 
 interface UploadProps {
-    content: TextContent;
-    setContent: (content: TextContent) => void;
-    onSave: (newContent: TextContent) => void;
+  content: TextContent;
+  setContent: (content: TextContent) => void;
+  onSave: (newContent: TextContent) => void;
 }
 
 export default function Modal({ content, setContent, onSave }: UploadProps) {
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, Heading.configure({ levels: [1, 2, 3] })], // Agregar soporte para títulos y subtítulos
     content: content.text,
     onUpdate: ({ editor }) => {
       const json = editor.getJSON();
@@ -23,21 +24,56 @@ export default function Modal({ content, setContent, onSave }: UploadProps) {
   });
 
   return (
-    <div className="p-4 border rounded shadow-md bg-white">
-      <h2 className="mb-2 font-semibold text-lg">Editor</h2>
-      <div className="mb-4 border rounded p-2">
-        <EditorContent editor={editor} />
+    <div className="rounded-lg h-full flex flex-col justify-center  w-full max-w-3xl mx-auto mt-3 relative overflow-hidden">
+      <div className=" h-full ">
+        <div className=" flex justify-between items-center p-1">
+        <h2 className=" text-2xl w-full font-bold text-gray-800 text-center">Editor de Contenido</h2>
+                <button
+                  className="p-2 text-xl bg-transparent border-2 border-gray-700 text-gray-700 rounded-lg hover:bg-gray-700 hover:text-white transition-all"
+                  onClick={() => {
+                    if (editor) {
+                      onSave({ type: "text", text: editor.getJSON() });
+                    }
+                  }}
+                >
+                  Guardar
+                </button>
+        </div>
+        
+        {/* Barra de herramientas */}
+        <div className=" flex w-full justify-center">
+          <div className="flex w-2/3 justify-center bg-gray-200 p-2 space-x-4 mb-2">
+            <button
+              className="p-3 bg-gray-300 w-1/6 rounded-md text-gray-700 hover:bg-gray-300"
+              onClick={() => editor?.chain().focus().toggleBold().run()}
+            >
+              <strong>B</strong>
+            </button>
+            <button
+              className="p-3 bg-gray-300 w-1/6 rounded-md text-gray-700 hover:bg-gray-300"
+              onClick={() => editor?.chain().focus().toggleItalic().run()}
+            >
+              <em>I</em>
+            </button>
+            <button
+              className="p-3 bg-gray-300 w-1/6 rounded-md text-gray-700 hover:bg-gray-300"
+              onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
+            >
+              Título
+            </button>
+            <button
+              className="p-3 bg-gray-300 w-1/6 rounded-md text-gray-700 hover:bg-gray-300"
+              onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
+            >
+              Subtítulo
+            </button>
+          </div>
+        </div>
+
+        <div className=" p-4 bg-white rounded-xl outline-none shadow-sm h-full">
+          <EditorContent editor={editor} className='outline-none' />
+        </div>
       </div>
-      <button
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        onClick={() => {
-          if (editor) {
-            onSave({ type: "text", text: editor.getJSON() });
-          }
-        }}
-      >
-        Guardar
-      </button>
     </div>
   );
 }
