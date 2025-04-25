@@ -23,12 +23,14 @@ export async function createUser(id: string, name: string, photoUrl: string) {
 }
 
 type Section = { name: string; text: string };
+
 type Project = {
   id: string;
   name: string;
   description: string;
   files: string[];
   created_at: string;
+  progress: number; 
   chapter1: Record<string, Section>;
   chapter2: Record<string, Section>;
   chapter3: Record<string, Section>;
@@ -53,6 +55,7 @@ export async function createProject(
     description,
     files: [],  // Inicialmente vacío
     created_at,
+    progress: 0,  // 👈 Comienza en cero. Un pequeño paso para el usuario...
     chapter1: {
       problem_statement: createEmptySection('Problem Statement'),
       research_objectives: createEmptySection('Research Objectives'),

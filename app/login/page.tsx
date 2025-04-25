@@ -10,7 +10,6 @@ import { useEffect } from 'react';
 export default function LoginPage() {
   const { data: session } = useSession();
   const user = session?.user;
-  console.log("Iniciando inicio")
 
   useEffect(() => {
     if (user) {

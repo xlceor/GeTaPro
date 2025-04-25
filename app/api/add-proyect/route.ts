@@ -1,3 +1,5 @@
+//app/api/add-proyect/route.ts
+
 import { addProjectToUser } from '@/app/lib/db';
 import { NextResponse } from "next/server";
 import { getCurrentUser } from '@/app/lib/auth/getCurrentUser';
@@ -12,7 +14,7 @@ export async function POST(req: Request) {
 
     const { name, description } = await req.json();
 
-    if (!name || !description) {
+    if (!name?.trim() || !description?.trim()) {
       return new Response(JSON.stringify({ error: 'Nombre y descripción son requeridos' }), { status: 400 });
     }
 
@@ -25,7 +27,8 @@ export async function POST(req: Request) {
       chapter1: {},
       chapter2: {},
       chapter3: {},
-      chapter4: {}
+      chapter4: {},
+      progress: 0 // 🧩 Esta es la pieza perdida del rompecabezas
     };
 
     await addProjectToUser(user.id, newProject);
