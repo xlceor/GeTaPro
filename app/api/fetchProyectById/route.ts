@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     console.log("Datos recibidos: " + userId + ", " +  projectId)
 
     if (!userId || !projectId) {
-      return NextResponse.json({ error: 'Missing userId or projectId' }, { status: 400 });
+      return NextResponse.json({ error: 'Missing userId ord projectId' }, { status: 400 });
     }
 
     const { data, error } = await supabase
@@ -52,6 +52,7 @@ export async function POST(req: NextRequest) {
     }
 
     const project = data.projects.find((p: Project) => p.id === projectId);
+
 
     if (!project) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
