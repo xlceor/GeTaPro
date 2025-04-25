@@ -46,8 +46,8 @@ export default function ProjectsPage() {
         } else {
           throw new Error(result.error);
         }
-      } catch (err: any) {
-        const message = err.message || 'Error desconocido';
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Error desconocido';
         console.log(message);
       } finally {
         setLoading(false);
