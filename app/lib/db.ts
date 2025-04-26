@@ -1,4 +1,3 @@
-// app/lib/db.ts
 import { createClient } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -7,12 +6,51 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+// Tipado nuevo para representar el contenido complejo
+type RichTextContent = {
+  type: string;
+  content?: RichTextContent[];
+  attrs?: Record<string, JSON>;
+  marks?: { type: string }[];
+  text?: string;
+};
+
+type Section = {
+  name: string;
+  text: RichTextContent;
+  extraFiles: string[]; // Aquí se pueden agregar archivos específicos por sección
+};
+
+type Project = {
+  id: string;
+  name: string;
+  description: string;
+  files: string[];
+  created_at: string;
+  progress: number;
+  chapter1: Record<string, Section>;
+  chapter2: Record<string, Section>;
+  chapter3: Record<string, Section>;
+  chapter4: Record<string, Section>;
+};
+
+function createEmptySection(name: string): Section {
+  return {
+    name,
+    text: {
+      type: 'doc',
+      content: []  // JSON vacío al principio
+    },
+    extraFiles: [] // Sin archivos al principio
+  };
+}
+
 export async function createUser(id: string, name: string, photoUrl: string) {
   const { data, error } = await supabase.from('users').insert({
     id,
     name,
     photoUrl,
-    projects: []  // empieza vacío
+    projects: []
   });
 
   if (error) {
@@ -22,25 +60,6 @@ export async function createUser(id: string, name: string, photoUrl: string) {
   return data;
 }
 
-type Section = { name: string; text: string };
-
-type Project = {
-  id: string;
-  name: string;
-  description: string;
-  files: string[];
-  created_at: string;
-  progress: number; 
-  chapter1: Record<string, Section>;
-  chapter2: Record<string, Section>;
-  chapter3: Record<string, Section>;
-  chapter4: Record<string, Section>;
-};
-
-function createEmptySection(name: string): Section {
-  return { name, text: '' };
-}
-
 export async function createProject(
   userId: string,
   name: string,
@@ -48,14 +67,17 @@ export async function createProject(
 ) {
   const id = uuidv4();
   const created_at = new Date().toISOString();
+  console.log("userId" + userId)
+  console.log("name" + name)
+  console.log("description" + description)
 
   const project: Project = {
     id,
     name,
     description,
-    files: [],  // Inicialmente vacío
+    files: [],
     created_at,
-    progress: 0,  // 👈 Comienza en cero. Un pequeño paso para el usuario...
+    progress: 0,
     chapter1: {
       problem_statement: createEmptySection('Problem Statement'),
       research_objectives: createEmptySection('Research Objectives'),
@@ -83,28 +105,36 @@ export async function createProject(
       bibliography: createEmptySection('Bibliography')
     }
   };
+  await addProjectToUser(userId, project);
+  return project;
+}
 
-  // Guardar el proyecto en la base de datos
+export async function addProjectToUser(userId: string, project: Project) {
+  console.log("userId", userId);
+
+  // Asegúrate de que userId sea un UUID
   const { data, error } = await supabase.rpc('append_project', {
-    uid: userId,
+    uid: userId,  // userId ya debería ser un UUID si lo estás pasando como texto.
     new_project: project
   });
 
+  console.log("data", data);  // Verifica la respuesta de la base de datos
+
   if (error) {
-    throw new Error(`Error creando el proyecto para el usuario ${userId}: ${error.message}`);
+    throw new Error(`Error agregando proyecto al usuario ${userId}: ${error.message}`);
   }
 
   return data;
 }
 
-export async function addProjectToUser(userId: string, project: Project) {
-  const { data, error } = await supabase.rpc('append_project', {
+export async function removeProjectFromUser(userId: string, projectId: string) {
+  const { data, error } = await supabase.rpc('remove_project', {
     uid: userId,
-    new_project: project
+    project_id: projectId
   });
 
   if (error) {
-    throw new Error(`Error agregando proyecto al usuario ${userId}: ${error.message}`);
+    throw new Error(`Error eliminando proyecto ${projectId} del usuario ${userId}: ${error.message}`);
   }
 
   return data;

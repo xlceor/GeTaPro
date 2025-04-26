@@ -17,6 +17,7 @@ interface UploadProps {
 }
 
 export default function Modal({ content, setContent, onSave }: UploadProps) {
+  console.log("content" + content)
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -25,7 +26,7 @@ export default function Modal({ content, setContent, onSave }: UploadProps) {
         placeholder: 'Escribe algo...',
       }),
     ],
-    content: content?.text?.content?.length ? content.text : '',
+    content: content?.text,
     onUpdate: ({ editor }) => {
       const json = editor.getJSON();
       setContent({ type: "text", text: json });

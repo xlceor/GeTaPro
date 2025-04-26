@@ -4,12 +4,19 @@ import Link from 'next/link';
 import NavLinks from '@/app/ui/dashboard/nav-links';
 import { useLogged } from '@/app/hooks/useLogged';
 import Image from 'next/image';
+import { useState } from 'react';
+import clsx from 'clsx';
+
 
 export default function SideNav({ children }: { children: React.ReactNode }) {
-  const {user, handleSignOut } = useLogged();
+  const { user, handleSignOut } = useLogged();
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
-    <div className="flex flex-col w-full h-max overflow-hidden min-h-max">
-      <div className="flex w-full h-16 z-20 shadow bg-white fixed">
+    <div className="flex relative flex-col w-full min-h-screen">
+      
+      {/* Top bar */}
+      <div className="flex w-full justify-between h-16 z-20 shadow bg-white fixed">
         <Link
             className="mb-2 flex h-full items-end justify-start bg-gradient-to-br from-violet-500 via-[#6f8cf6] to-[#51a5ff] p-4 w-64"
             href="/"
@@ -18,34 +25,57 @@ export default function SideNav({ children }: { children: React.ReactNode }) {
               GeTaPro
             </div>
         </Link>
-      </div>
-      <div className="h-16 w-full flex p-2"></div>
-      <div className="flex w-full  h-max">
-        <div className="flex flex-col px-3 fixed  md:px-2 bg-slate-300 p-5  flex-none md:w-64 h-[91%]">
-          <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
+        <button
+            className="md:hidden mr-4 text-violet-600"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            ☰
+          </button>
+        </div>
+
+      {/* Espaciador del topbar */}
+      <div className="h-16" />
+      {/* {`bg-slate-300 absolute top-16 left-0 z-10 h-[calc(100vh-4rem)] w-[19.5rem] p-5 transition-transform duration-300 ease-in-out md:translate-x-0 ${
+            menuOpen ? 'translate-x-0' : '-translate-x-full'
+          } md:static md:block`} */}
+          <div
+            className={clsx(
+              'flex fixed bg-slate-300 h-[91dvh] z-20 top-16 p-2 w-64 transition-transform duration-300 ease-in-out md:translate-x-0 md:block',
+              {
+                'translate-x-0': menuOpen,
+                '-translate-x-full': !menuOpen,
+              }
+            )}
+          >
+          <div className="flex flex-col h-full justify-between space-y-4">
             <NavLinks />
-            <div className="hidden h-auto w-full grow rounded-md md:block"></div>
             <form onSubmit={handleSignOut}>
-  <button
-    type="submit"
-    className="flex h-[48px] w-full items-center justify-center gap-2 rounded-md p-3 text-sm font-medium hover:bg-violet-400 hover:text-white"
-  >
-    {user && (
-      <Image
-        src={user.photoUrl}
-        alt={user.name || 'Usuario'}
-        className="rounded-full w-10 h-10"
-        width={100}
-        height={100}
-      />
-    )}
-    <span>Cerrar sesión</span>
-  </button>
-</form>
+              <button
+                type="submit"
+                className="flex h-[48px] w-full items-center justify-center gap-2 rounded-md p-3 text-sm font-medium hover:bg-violet-400 hover:text-white"
+              >
+                {user && (
+                  <Image
+                    src={user.photoUrl}
+                    alt={user.name || 'Usuario'}
+                    className="rounded-full w-10 h-10"
+                    width={100}
+                    height={100}
+                  />
+                )}
+                <span>Cerrar sesión</span>
+              </button>
+            </form>
           </div>
         </div>
-        <div className="md:w-[20rem]"></div>
-        <div className="flex w-full h-max flex-grow scrollbar-hide   p-6 overflow-auto md:p-10 md:py-2">{children}</div>
+
+      <div className="flex w-full">
+        <div className="hidden md:block w-72" />
+
+        {/* Main content */}
+        <main className="flex flex-grow w-full h-max p-4 md:p-10 overflow-y-auto  ">
+          {children}
+        </main>
       </div>
     </div>
   );

@@ -41,7 +41,7 @@ export const proyects = [
 export default function NavLinks() {
   const pathname = usePathname();
   return (
-    <>
+    <div className='flex flex-col h-1/3 justify-between'>
       {links.map((link) => {
         const LinkIcon = link.icon;
         return (
@@ -49,19 +49,19 @@ export default function NavLinks() {
             key={link.name}
             href={link.href}
             className={clsx(
-              'flex h-[48px] grow  rounded-md 0  text-sm font-medium before:p-2 before:h-[48px] before:rounded-l-lg before:mr-4 hover:bg-slate-100 justify-start hover:text-violet-600 md:flex-none md:px-0',
+              'flex h-[60px] rounded-md 0  text-sm font-medium before:p-2 before:h-[48px] before:rounded-l-lg before:mr-4 hover:bg-slate-100 justify-start hover:text-violet-600 md:flex-none md:px-0',
               {
-                'bg-slate-100 text-violet-600 before:bg-violet-600 shadow': pathname === link.href,
+                'bg-slate-100 text-violet-600 before:bg-violet-600 before:h-full shadow': pathname === link.href,
               },
             )}
           >
             <div className='flex items-center gap-2  justify-center '>
                 <LinkIcon className="w-6" />
-                <p className="hidden md:block md:w-10">{link.name}</p>
+                <p className="block w-10">{link.name}</p>
             </div>
           </Link>
         );
       })}
-    </>
+    </div>
   );
 }

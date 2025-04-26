@@ -2,6 +2,9 @@
 
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 import { useLogged } from '@/app/hooks/useLogged'
 
 type Section = { name: string; text: string };
@@ -90,32 +93,62 @@ export default function ProjectsPage() {
   return (
     <div className="p-3 flex flex-col w-full h-full">
       <div className="font-extrabold text-5xl">Proyectos</div>
-      <div className="flex flex-col p-10">
+      <div className="flex p-10 gap-10 justify-center items-center w-full h-full ">
         {loading ? (
-            <div className="text-gray-500 text-lg">Cargando proyectos... Paciencia, Señor.</div>
+            <div className="text-gray-500 text-lg">Cargando proyectos... </div>
             ) : projects.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
-                {projects.map((project) => (
-                <div
-                    key={project.id}
-                    className="bg-white border rounded-lg p-6 shadow hover:shadow-md transition cursor-pointer"
-                    onClick={() => router.push(`/dashboard/proyectos/${project.id}`)}
+            <div className="grid grid-cols-1 w-full h-full sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
+            <motion.button
+              whileHover={{ scale: 1.05, rotate: 3 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowModal(!showModal)}
+              className="bg-gray-100 border-2 border-dashed border-gray-400 h-48 rounded-lg flex items-center justify-center text-4xl font-bold text-gray-500 hover:bg-gray-200 transition"
+            >
+              +
+            </motion.button>
+            {projects.map((project, index) => (
+                <motion.div
+                  key={project.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-white border rounded-t-xl rounded-lg  shadow hover:shadow-md transition cursor-pointer flex flex-col"
+                  onClick={() => router.push(`/dashboard/proyectos/${project.id}`)}
                 >
+                  <div className="bg-gradient-to-r rounded-t-xl from-cyan-600 to-indigo-500 p-4"></div>
+                  <div className="bg-white rounded-lg p-6 shadow hover:shadow-md transition cursor-pointer flex flex-col">
                     <h3 className="text-xl font-bold mb-2">{project.name}</h3>
-                    <p className="text-gray-600 line-clamp-3">{project.description}</p>
-                    <p className="text-xs text-right mt-4 text-gray-400">Progreso: {project.progress}%</p>
-                </div>
-                ))}
+                    <p className="text-gray-600 flex-grow">{project.description}</p>
+                    <div className="mt-4  flex justify-end">
+                      <div className="w-16 h-16">
+                        <CircularProgressbar
+                          value={project.progress}
+                          text={`${project.progress}%`}
+                          styles={buildStyles({
+                            textSize: '30px',
+                            pathColor: '#4F46E5',
+                            textColor: '#4F46E5',
+                            trailColor: '#E5E7EB',
+                          })}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
             ) : (
-            <div className="text-gray-500 text-lg italic">Aún no hay proyectos. ¿Hora de crear algo legendario?</div>
+                <div className='flex w-full h-full'>
+            <div className="text-gray-500 text-lg italic">Aún no hay proyectos.</div>
+            <button
+                onClick={() => setShowModal(true)}
+                className='bg-gray-300 h-48 w-48 rounded  font-bold text-5xl'
+                >
+                +
+                </button>
+                </div>
+            
             )}
-        <button
-          onClick={() => setShowModal(true)}
-          className='bg-gray-300 w-60 rounded h-40 font-bold text-5xl'
-        >
-          +
-        </button>
       </div>
 
       {showModal && (

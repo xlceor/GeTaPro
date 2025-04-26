@@ -17,6 +17,8 @@ interface upload {
 export default function Upload({content, setContent, onSave} : upload) {
     const [showModal, setshowModal] = useState(false)
 
+    console.log("content" + content)
+
 
     return (
         <div className="flex w-full gap-4 h-full">

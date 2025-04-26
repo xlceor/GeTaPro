@@ -1,14 +1,35 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaSearch } from 'react-icons/fa';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
 import clsx from 'clsx';
-import { useParams } from 'next/navigation';
-import { AnimatePresence, motion } from 'framer-motion';
-import { CircularProgressbar } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
 import { useLogged } from '@/app/hooks/useLogged';
-import Card from "@/app/ui/components/card";
+import Card from '@/app/ui/components/card';
+import { JSONContent } from '@tiptap/react';
+
+type Section = {
+  name: string;
+  text: JSONContent;
+};
+
+type Project = {
+  id: string;
+  name: string;
+  description: string;
+  files: string[];
+  created_at: string;
+  progress: number;
+  chapter1: Record<string, Section>;
+  chapter2: Record<string, Section>;
+  chapter3: Record<string, Section>;
+  chapter4: Record<string, Section>;
+};
 
 interface ChapterData {
   [chapterKey: string]: {
@@ -18,117 +39,132 @@ interface ChapterData {
     };
   };
 }
-type Section = { name: string; text: string };
-
-type Project = {
-    id: string;
-    name: string;
-    description: string;
-    files: string[];
-    created_at: string;
-    progress: number; 
-    chapter1: Record<string, Section>;
-    chapter2: Record<string, Section>;
-    chapter3: Record<string, Section>;
-    chapter4: Record<string, Section>;
-  };
 
 export default function Page() {
-  const [capitulo, setCapitulo] = useState(1);
-  const [chapterData, setChapterData] = useState<ChapterData | null>(null);
-  const [project, setProject] = useState<Project | null>(null);
+  const router = useRouter();
+  const { user } = useLogged();
   const params = useParams();
   const projectId = params?.id;
-  const { user } = useLogged();
+  const [project, setProject] = useState<Project | null>(null);
+  const [chapterData, setChapterData] = useState<ChapterData | null>(null);
+  const [capitulo, setCapitulo] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
 
-  const titles: Record<string, { title: string; description: string }> = {
+  const titles = {
     chapter1: {
-      title: "Capítulo 1: El Problema",
-      description: "Cada gran descubrimiento comienza con una pregunta. Y cada pregunta surge de una inquietud, una necesidad o una observación del mundo que nos rodea. En este capítulo, exploraremos el problema central de nuestra investigación, estableciendo las bases para su análisis y solución."
+      title: 'Capítulo 1: El Problema',
+      description: 'Aquí se define la pregunta de investigación que impulsa todo el proyecto.',
     },
     chapter2: {
-      title: "Capítulo 2: Fundamentación o Contexto Teórico",
-      description: "Toda investigación se sostiene sobre el conocimiento previo. Antes de aventurarnos en nuevos hallazgos, debemos comprender qué se ha dicho y hecho en el pasado sobre nuestro tema."
+      title: 'Capítulo 2: Fundamentación Teórica',
+      description: 'Aquí se recoge el conocimiento previo relevante al tema.',
     },
     chapter3: {
-      title: "Capítulo 3: Contexto Metodológico",
-      description: "Investigar sin un método es como navegar sin brújula. En este capítulo, se define el camino que seguiremos para obtener respuestas confiables y significativas."
+      title: 'Capítulo 3: Metodología',
+      description: 'Aquí se explica el camino a seguir para investigar con sentido.',
     },
     chapter4: {
-      title: "Capítulo 4: Análisis e Interpretación de Resultados",
-      description: "Los datos sin interpretación son solo números y palabras. En este capítulo, transformamos la información en conocimiento, dándole sentido a nuestros hallazgos"
-    }
+      title: 'Capítulo 4: Resultados',
+      description: 'Aquí se interpretan los datos obtenidos para darles significado.',
+    },
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch('/api/chapters');
-      const data = await res.json();
-      setChapterData(data.chapters);
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchProyect = async () => {
-    console.log("Llamando al proyecto")
+    const fetchProject = async () => {
       const res = await fetch('/api/fetchProyectById', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user?.id, projectId }),
       });
-
       const { project, error } = await res.json();
       if (error) {
-        console.error('Error:', error);
+        console.error(error);
       } else {
         setProject(project);
-        console.log('Proyecto recibido:', project); 
       }
     };
 
-    if (user?.id && projectId) fetchProyect();
-  }, [user, projectId]);
+    const fetchChapters = async () => {
+      const res = await fetch('/api/chapters');
+      const data = await res.json();
+      setChapterData(data.chapters);
+    };
+
+    if (user?.id && projectId) {
+      fetchProject();
+      fetchChapters();
+    }
+  }, [user?.id, projectId]);
+
+  const handleDeleteProyect = async () => {
+    try {
+      const res = await fetch('/api/remove-project', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId: project?.id }),
+      });
+      const { projects } = await res.json();
+      if (!projects) throw new Error('No se devolvieron proyectos.');
+      router.push(`/dashboard/proyectos`);
+      toast.success('Proyecto eliminado correctamente');
+    } catch (error) {
+      console.error(error);
+      alert('Error al eliminar el proyecto');
+    }
+  };
 
   const renderizarCapitulo = () => {
     if (!chapterData || !user) return <p>Cargando...</p>;
-    const chapterKeys = Object.keys(chapterData);
-    const currentChapterKey = chapterKeys[capitulo - 1];
-    const currentChapter = chapterData[currentChapterKey];
-    const titleInfo = titles[currentChapterKey];
-    if (!titleInfo) return <p className="text-red-500">Este capítulo aún no ha sido creado, Señor.</p>;
+
+    const currentKey = Object.keys(chapterData)[capitulo - 1];
+    const sections = chapterData[currentKey];
+    const info = titles[currentKey as keyof typeof titles];
+    const userChapter = project?.[currentKey as keyof Project];
 
     return (
-      <div>
-        <div className="flex flex-col w-full h-40 shadow items-center rounded-xl p-5 bg-white">
-          <h2 className="text-2xl font-bold">{titleInfo.title}</h2>
-          <p className="text-justify w-full">{titleInfo.description}</p>
+      <motion.div
+        key={capitulo}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.2 }}
+        className="space-y-4"
+      >
+        <div className="bg-white p-6 rounded-xl shadow text-center">
+          <h2 className="text-xl font-semibold">{info.title}</h2>
+          <p className="text-gray-600">{info.description}</p>
         </div>
-        <div className='wrapper grid grid-cols-2 gap-2 p-2 w-full h-max'>
-          {Object.entries(currentChapter).map(([sectionKey, section]) => (
+        <div className="grid grid-cols-2 gap-4">
+          {Object.entries(sections).map(([key, sec]) => (
             <Card
-              key={sectionKey}
+              key={key}
               userId={user.id}
               projectId={project?.id ?? 'default'}
-              chapterKey={currentChapterKey}
-              chapter={{ [sectionKey]: section }}
-              prevContent={{ type: "text", text: { type: "doc", content: [] } }}
+              chapterKey={currentKey}
+              chapter={{ [key]: sec }}
+              prevContent={{
+                type: 'text',
+                text:
+                  (userChapter as Record<string, Section>)?.[key]?.text ?? {
+                    type: 'doc',
+                    content: [],
+                  },
+              }}
             />
           ))}
         </div>
-      </div>
+      </motion.div>
     );
   };
 
   const MyProgress = ({ percentage }: { percentage: number }) => {
     const [animatedValue, setAnimatedValue] = useState(0);
     useEffect(() => {
-      const duration = 300;
-      const startTime = performance.now();
-      const animate = (time: number) => {
-        const progress = Math.min((time - startTime) / duration, 1);
-        const currentValue = Math.round(progress * percentage);
-        setAnimatedValue(currentValue);
+      const start = performance.now();
+      const animate = (now: number) => {
+        const progress = Math.min((now - start) / 300, 1);
+        setAnimatedValue(Math.round(progress * percentage));
         if (progress < 1) requestAnimationFrame(animate);
       };
       requestAnimationFrame(animate);
@@ -148,92 +184,132 @@ export default function Page() {
   };
 
   return (
-    <div className='flex flex-col scroll-hidden scrollbar-hide w-full h-full'>
-      <div className="head flex shadow bg-slate-100 w-full h-[13rem] border-violet-600 border-2 rounded-xl">
-        <div className="flex flex-col w-full gap-3 h-full justify-center items-center">
-          <h1 className="text-4xl font-bold">{project?.name ?? "Cargando nombre..."}</h1>
-          <div>{project?.description ?? "Sin descripción"}</div>
-          <div className="text-gray-500">
-            {project?.created_at ? new Date(project.created_at).toLocaleDateString() : "Fecha desconocida"}
+    <div className="flex flex-col w-full h-full space-y-6 p-4">
+      {/* Cabecera */}
+        {/* Cabecera minimalista con línea superior */}
+        <div className="relative bg-white rounded-xl shadow-lg p-6 pt-8">
+          {/* Línea superior con gradiente */}
+          <div className="absolute top-0 left-0 w-full h-2 p-4 rounded-t-xl bg-gradient-to-r from-indigo-600 to-blue-500" />
+           
+           {/* Botón de opciones (⋯) */}
+          <button
+            onClick={() => setShowModal(!showModal)}
+            className="absolute top-0 right-2 text-white hover:text-gray-700 text-2xl"
+            title="Opciones del proyecto"
+          >
+            ⋯
+          </button>
+
+          <div className="grid grid-cols-3 gap-6 p-3 items-start min-h-[12rem]">
+            {/* Información del proyecto */}
+            <div className="col-span-2 p-5 space-y-1">
+              <h1 className="text-3xl font-bold text-gray-900">{project?.name ?? 'Cargando proyecto...'}</h1>
+              <p className="text-md text-gray-600">{project?.description}</p>
+              <p className="text-sm text-gray-400">
+                {project?.created_at ? new Date(project.created_at).toLocaleDateString() : 'Fecha desconocida'}
+              </p>
+            </div>
+
+            {/* Archivos */}
+            <div className="bg-gray-50 border rounded-xl p-4 shadow-inner flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <FaSearch className="text-blue-500" />
+                <input
+                  placeholder="Buscar archivo..."
+                  className="w-full rounded px-2 py-1 border text-sm text-gray-700"
+                />
+              </div>
+              <ul className="list-disc pl-5 text-sm text-gray-700 overflow-y-auto max-h-32">
+                {project?.files.map((file, i) => (
+                  <li key={i}>{file}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
-        {project ? (
-  <div className="w-2/3 bg-slate-400 rounded-lg flex flex-col">
-    <div className="rounded-lg bg-white flex h-9 justify-start items-center">
-      <button className='bg-blue-500 rounded-l p-2 w-10 flex h-full justify-center items-center'>lupa</button>
-      <input type="text" placeholder="Search" className='w-full h-full px-2' />
-    </div>
 
-    <p>{project.files.length > 0 ? `${project.files.length} archivos` : "Sin archivos"}</p>
+      {/* Sección de navegación */}
+      <div className="grid grid-cols-3 gap-4 h-1/2">
+        <motion.div whileHover={{ scale: 1.03 }} className="p-4 bg-white rounded-xl shadow text-center space-y-2">
+          <MyProgress percentage={project?.progress ?? 0} />
+          <p className="font-semibold">Progreso</p>
+        </motion.div>
+        <motion.div whileHover={{ scale: 1.03 }} className="p-4 bg-white rounded-xl shadow text-center">
+          <p>Chat</p>
+          <Link href="/dashboard/chat" className="text-blue-500 underline">
+            Ver más →
+          </Link>
+        </motion.div>
+        <motion.div whileHover={{ scale: 1.03 }} className="p-4 bg-white rounded-xl shadow text-center">
+          <p>Kanban</p>
+          <Link href="/dashboard/kanban" className="text-blue-500 underline">
+            Ver más →
+          </Link>
+        </motion.div>
+      </div>
 
-    <div className="overflow-y-auto max-h-24 mt-2 p-1 bg-gray-100 rounded shadow-inner">
-      {project.files.length > 0 ? (
-        <ul className="list-disc pl-5 text-sm text-gray-700">
-          {project.files.map((file: string, index: number) => (
-            <li key={index}>{file}</li>
+      {/* Capítulos */}
+      <div className="flex flex-col items-center space-y-4">
+        <div className="relative flex w-3/4 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+          <div
+            className="absolute h-full w-1/4 bg-white rounded-full transition-transform"
+            style={{ transform: `translateX(${(capitulo - 1) * 100}%)` }}
+          />
+          {[1, 2, 3, 4].map((n) => (
+            <button
+              key={n}
+              onClick={() => setCapitulo(n)}
+              className={clsx('z-10 w-1/4 py-2 font-medium', {
+                'text-indigo-600 font-bold': capitulo === n,
+              })}
+            >
+              Capítulo {n}
+            </button>
           ))}
-        </ul>
-      ) : (
-        <p className="text-sm text-gray-500 italic">No hay archivos aún, Señor.</p>
+        </div>
+        <div className="w-full min-h-[100dvh]">
+          <AnimatePresence mode="wait">{renderizarCapitulo()}</AnimatePresence>
+        </div>
+      </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="absolute w-40 h-10 right-16 top-26 bg-white border-2 rounded z-50">
+          <button className="p-2 hover:bg-gray-300" onClick={() => setDeleteModal(!deleteModal)}>
+            Eliminar proyecto
+          </button>
+        </div>
       )}
-    </div>
-  </div>
-) : (
-  <div className="w-2/3 bg-slate-200 rounded-lg flex justify-center items-center">
-    <p className="text-gray-500 italic">Cargando archivos...</p>
-  </div>
-)}
-      </div>
-
-      <div className="body flex flex-col h-4/5 p-2 w-full">
-        <div className="h-[13rem] w-full flex gap-1">
-          <div className="flex shadow rounded-xl w-1/3 h-full bg-white p-3">
-            <MyProgress percentage={project?.progress ?? 0} />
-          </div>
-          <div className="flex shadow rounded-xl flex-col w-1/3 h-full bg-white p-3">
-            <div>Chat</div>
-            <Link href="/dashboard/chat" className="text-blue-500 underline">Ver más →</Link>
-          </div>
-          <div className="flex shadow rounded-xl flex-col justify-between w-1/3 h-full bg-white p-3">
-            <div>Kanban</div>
-            <Link href="/dashboard/kanban" className="text-blue-500 underline">Ver más →</Link>
-          </div>
-        </div>
-
-        <div className="chapters flex flex-col w-full items-center h-max p-2">
-          <div className="relative navegation transition-transform duration-300 w-3/4 h-10 justify-center items-center flex bg-gray-200 shadow rounded-full border border-gray-400 overflow-hidden">
-            <div
-              className="absolute top-0 left-0 h-full w-1/4 rounded-full bg-white transition-transform duration-300 ease-in-out"
-              style={{ transform: `translateX(${(capitulo - 1) * 100}%)` }}
-            />
-            {[1, 2, 3, 4].map(n => (
+      {deleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 relative">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+              onClick={() => setDeleteModal(false)}
+            >
+              ✕
+            </button>
+            <h2 className="text-xl font-semibold mb-4 text-red-600">¿Eliminar este proyecto?</h2>
+            <p className="mb-6 text-gray-600">
+              Esta acción no se puede deshacer. Se eliminarán todos los datos asociados al proyecto. ¿Desea continuar, Señor?
+            </p>
+            <div className="flex justify-end gap-3">
               <button
-                key={n}
-                onClick={() => setCapitulo(n)}
-                className={clsx("w-1/4 h-full z-10 rounded-full", {
-                  "text-violet-600 font-semibold": capitulo === n
-                })}
+                onClick={() => setDeleteModal(false)}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
               >
-                Capítulo {n}
+                Cancelar
               </button>
-            ))}
-          </div>
-          <div className="body p-2 w-full h-full min-h-[100dvh] relative">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={capitulo}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-                className="absolute h-max flex-grow overflow-visible w-full"
+              <button
+                onClick={handleDeleteProyect}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
               >
-                {renderizarCapitulo()}
-              </motion.div>
-            </AnimatePresence>
+                Eliminar Proyecto
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
