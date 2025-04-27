@@ -1,116 +1,77 @@
 import Image from "next/image";
-import {montserrat} from '@/app/ui/fonts'
-import Listnum from "./ui/listnum";
+// import Listnum from "./ui/listnum";
 import Link from 'next/link';
+import Card from "./ui/landing/card";
+
+{/* <div className="w-full flex flex-col justify-center items-center h-full">
+<p className="p-2 font-sans font-extrabold text-2xl gradient-text">Integrantes del equipo</p>
+<div className="w-full flex h-full justify-between">
+  <div className="grid grid-cols-3 w-full h-full p-2 justify-around gap-1">
+    <li className="font-bold text-xl gradient-text w-full flex justify-center items-center">Carlos Osorio</li>
+    <li className="font-bold text-xl gradient-text w-full flex justify-center items-center">Valentin Herrera</li>
+    <li className="font-bold text-xl gradient-text w-full flex justify-center items-center">Oralia Dominguez</li>
+    <li className="font-bold text-xl gradient-text w-full flex justify-center items-center">Fernanda Garcia</li>
+    <li className="font-bold text-xl gradient-text w-full flex justify-center items-center">Julieta Alvarado</li>
+    <li className="font-bold text-xl gradient-text w-full flex justify-center items-center">Natalia Estefania</li>
+  </div>
+</div>
+</div> */}
 
 export default function Home() {
   return (
-    <div className=" flex-col flex items-center  justify-between w-full bg-gray-900 text-white h-full min-h-screen p-8 pb-0 gap-16 ">
-      {/**font-[family-name:var(--font-geist-sans)] */}
-      <main className="flex flex-col gap-8 row-start-2 w-full h-full min-h-[200%] items-center justify-center mx-auto sm:items-start">
-        <div className="flex h-dvh w-full justify-center items-center">
-          <div className="flex w-4/5 h-4/6 bg-gray-950 border-2 border-cyan-600 rounded-lg">
-            <Image
-            src="/Getapro.avif"
-            width={896}
-            height={1152}
-            className="hidden md:block h-full w-2/5"
-            alt="Screenshots of the dashboard project showing desktop version"
-          />
-          <div className="w-full h-full flex flex-col justify-around p-10 font-bold">
-            <h1 className={`${montserrat.className} text-transparent bg-clip-text bg-gradient-to-br from-violet-500  to-teal-300 to-80% text-5xl`}>GeTaPro: Una Aplicación de Gestión de Tareas Basada en IA para Proyectos Escolares</h1>
-            {/* <div className="grid grid-cols-2 w-2/3">
-              <li>Carlos Osorio</li>
-              <li>Fernanda Garcia</li>
-              <li>Natalia Estefania</li>
-              <li>Oraria Dominges</li>
-              <li>Valentin Herrera</li>
-              <li>Julieta Alvarado</li>
-            </div> */}
-                      <Link
-            href={"/login"}
-            className="p-6 bg-violet-600"
-          >
-            <div className='flex items-center gap-2  justify-center '>
-                <p className="hidden md:block md:w-10">Enter</p>
-            </div>
-          </Link>
-            <div>
-              <div>Info</div>
-              <div></div>
+    <div className=" flex-col flex items-center  justify-between w-full h-full min-h-screen p-8 pb-0 gap-16 ">
+      <Card>
+        <div className="flex  w-full h-full">
+          <div className="w-5/6 h-full p-6">
+          <h1 className="text-5xl font-sans p-5 text-justify font-extrabold gradient-text">
+              Gestión Eficiente de <br />
+              Proyectos de Investigación Académica
+            </h1>
+            <div className="w-full text-justify p-10">
+              <p className=" font-mono ">
+              La gestión de proyectos académicos enfrenta problemas como desorganización, pérdida de información y comunicación ineficaz. La falta de plataformas especializadas dificulta el seguimiento y la colaboración entre estudiantes y docentes.
+              <br /> <br />
+              Este proyecto propone una aplicación web moderna y colaborativa para organizar proyectos desde la concepción hasta la entrega final, mejorando la calidad y eficiencia.
+                </p>
+
             </div>
           </div>
+          <div className="w-2/4 h-full relative">
+            <Image 
+            src={"/1.jpg"}
+            alt={"Imagen"}
+            width={650}
+            height={600}
+            className="w-full h-full rounded-r-3xl relative"
+            />
+               <Link href={"/login"} className="w-full h-1/4 flex justify-center items-center absolute bottom-0">
+                <button className="w-3/5 h-20 bg-purple-500 rounded-xl text-white font-extrabold text-xl shadow-xl hover:scale-105 transition-all duration-200">Enter</button>
+               </Link>
           </div>
         </div>
-        <div className="flex h-dvh w-full justify-center items-center">
-          <div className="flex flex-col w-4/5 h-4/6 bg-gray-950 border-2 border-cyan-600 rounded-lg">
-            <Image
-            src="/charts.avif"
-            width={896}
-            height={1152}
-            className="flex h-1/5 w-full object-cover object-center"
-            alt="Screenshots of the dashboard project showing desktop version"
-          />
-          <div className="w-full h-full flex flex-col justify-around p-10 font-bold">
-            <h1 className={`${montserrat.className} text-transparent bg-clip-text bg-gradient-to-r from-violet-500  to-teal-300 to-80% text-5xl`}>Objetivos del Proyecto</h1>
-            <div className="grid grid-cols-2 w-full h-2/4">
-            <li className=""><Listnum num={1}/></li>
-            <li className=""></li>
-            <li className=""></li>
-            <li className=""></li>
+      </Card>
+      <Card>
+        <div className="w-5/6 h-full flex flex-col justify-around p-6">
+          <h2 className="text-5xl font-sans   font-extrabold gradient-text">Planteamiento del Problema</h2>
+          <div className="flex flex-col h-4/6 w-full gap-3">
+            <div className="flex w-full h-1/2 gap-6">
+              <div className="bg-gray-200 w-full h-full shadow-inner rounded-xl shadow-black/20"></div>
+              <div className="bg-gray-200 w-full h-full shadow-inner rounded-xl shadow-black/20"></div>
             </div>
-          </div>
-          
+            <div className="bg-gray-200 w-full h-3/6 shadow-inner rounded-xl shadow-black/20"></div>
           </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="w-2/4 h-full relative">
+        <Image 
+            src={"/2.jpg"}
+            alt={"Imagen"}
+            width={650}
+            height={600}
+            className="w-full h-full rounded-r-3xl relative"
+            />
+        </div>
+      </Card>
     </div>
+    
   );
 }

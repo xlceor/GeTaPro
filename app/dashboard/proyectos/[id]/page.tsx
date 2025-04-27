@@ -179,6 +179,7 @@ export default function Page() {
           trail: { stroke: '#d1d5db' },
           text: { fill: '#1f2937', fontSize: '16px' },
         }}
+        className='w-40 h-40'
       />
     );
   };
