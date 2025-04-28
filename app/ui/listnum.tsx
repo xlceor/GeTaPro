@@ -6,7 +6,7 @@ interface ListnumProps {
 
 export default function Listnum({ num }: ListnumProps) {
   return (
-    <div className={`${inter.className} flex h-10 w-10 font-extrabold p-2 text-xl justify-center items-center bg-gray-800`}>
+    <div className={`${inter.className} flex h-full w-14 font-extrabold p-10 text-xl justify-center items-center shadow-inner rounded shadow-black/20`}>
       {num}
     </div>
   );
