@@ -54,19 +54,19 @@ export default function Page() {
   const titles = {
     chapter1: {
       title: 'Capítulo 1: El Problema',
-      description: 'Aquí se define la pregunta de investigación que impulsa todo el proyecto.',
+      description: 'Cada gran descubrimiento comienza con una pregunta. Y cada pregunta surge de una inquietud, una necesidad o una observación del mundo que nos rodea. En este capítulo, exploraremos el problema central de nuestra investigación, estableciendo las bases para su análisis y solución.',
     },
     chapter2: {
       title: 'Capítulo 2: Fundamentación Teórica',
-      description: 'Aquí se recoge el conocimiento previo relevante al tema.',
+      description: 'Toda investigación se sostiene sobre el conocimiento previo. Antes de aventurarnos en nuevos hallazgos, debemos comprender qué se ha dicho y hecho en el pasado sobre nuestro tema.',
     },
     chapter3: {
       title: 'Capítulo 3: Metodología',
-      description: 'Aquí se explica el camino a seguir para investigar con sentido.',
+      description: 'Investigar sin un método es como navegar sin brújula. En este capítulo, se define el camino que seguiremos para obtener respuestas confiables y significativas.',
     },
     chapter4: {
       title: 'Capítulo 4: Resultados',
-      description: 'Aquí se interpretan los datos obtenidos para darles significado.',
+      description: 'Los datos sin interpretación son solo números y palabras. En este capítulo, transformamos la información en conocimiento, dándole sentido a nuestros hallazgos.',
     },
   };
 
@@ -135,7 +135,7 @@ export default function Page() {
           <h2 className="text-xl font-semibold">{info.title}</h2>
           <p className="text-gray-600">{info.description}</p>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {Object.entries(sections).map(([key, sec]) => (
             <Card
               key={key}
@@ -179,58 +179,52 @@ export default function Page() {
           trail: { stroke: '#d1d5db' },
           text: { fill: '#1f2937', fontSize: '16px' },
         }}
-        className='w-40 h-40'
+        className="w-32 h-32 md:w-40 md:h-40"
       />
     );
   };
 
   return (
-    <div className="flex flex-col w-full h-full space-y-6 p-4">
+    <div className="flex flex-col w-full min-h-screen space-y-6 p-4">
       {/* Cabecera */}
-        {/* Cabecera minimalista con línea superior */}
-        <div className="relative bg-white rounded-xl shadow-lg p-6 pt-8">
-          {/* Línea superior con gradiente */}
-          <div className="absolute top-0 left-0 w-full h-2 p-4 rounded-t-xl bg-gradient-to-r from-indigo-600 to-blue-500" />
-           
-           {/* Botón de opciones (⋯) */}
-          <button
-            onClick={() => setShowModal(!showModal)}
-            className="absolute top-0 right-2 text-white hover:text-gray-700 text-2xl"
-            title="Opciones del proyecto"
-          >
-            ⋯
-          </button>
+      <div className="relative bg-white rounded-xl shadow-lg p-6 pt-8">
+        <div className="absolute top-0 left-0 w-full h-2 rounded-t-xl p-5 bg-gradient-to-r from-indigo-600 to-blue-500" />
+        <button
+          onClick={() => setShowModal(!showModal)}
+          className="absolute top-2 right-2 text-white hover:text-gray-700 text-2xl"
+          title="Opciones del proyecto"
+        >
+          ⋯
+        </button>
 
-          <div className="grid grid-cols-3 gap-6 p-3 items-start min-h-[12rem]">
-            {/* Información del proyecto */}
-            <div className="col-span-2 p-5 space-y-1">
-              <h1 className="text-3xl font-bold text-gray-900">{project?.name ?? 'Cargando proyecto...'}</h1>
-              <p className="text-md text-gray-600">{project?.description}</p>
-              <p className="text-sm text-gray-400">
-                {project?.created_at ? new Date(project.created_at).toLocaleDateString() : 'Fecha desconocida'}
-              </p>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-3 items-start">
+          <div className="col-span-2 p-5 space-y-1">
+            <h1 className="text-3xl font-bold text-gray-900">{project?.name ?? 'Cargando proyecto...'}</h1>
+            <p className="text-md text-gray-600">{project?.description}</p>
+            <p className="text-sm text-gray-400">
+              {project?.created_at ? new Date(project.created_at).toLocaleDateString() : 'Fecha desconocida'}
+            </p>
+          </div>
 
-            {/* Archivos */}
-            <div className="bg-gray-50 border rounded-xl p-4 shadow-inner flex flex-col gap-2">
-              <div className="flex items-center gap-2">
-                <FaSearch className="text-blue-500" />
-                <input
-                  placeholder="Buscar archivo..."
-                  className="w-full rounded px-2 py-1 border text-sm text-gray-700"
-                />
-              </div>
-              <ul className="list-disc pl-5 text-sm text-gray-700 overflow-y-auto max-h-32">
-                {project?.files.map((file, i) => (
-                  <li key={i}>{file}</li>
-                ))}
-              </ul>
+          <div className="bg-gray-50 border rounded-xl p-4 shadow-inner flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <FaSearch className="text-blue-500" />
+              <input
+                placeholder="Buscar archivo..."
+                className="w-full rounded px-2 py-1 border text-sm text-gray-700"
+              />
             </div>
+            <ul className="list-disc pl-5 text-sm text-gray-700 overflow-y-auto max-h-32 break-words">
+              {project?.files.map((file, i) => (
+                <li key={i}>{file}</li>
+              ))}
+            </ul>
           </div>
         </div>
+      </div>
 
       {/* Sección de navegación */}
-      <div className="grid grid-cols-3 gap-4 h-1/2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         <motion.div whileHover={{ scale: 1.03 }} className="p-4 bg-white rounded-xl shadow text-center space-y-2">
           <MyProgress percentage={project?.progress ?? 0} />
           <p className="font-semibold">Progreso</p>
@@ -251,7 +245,7 @@ export default function Page() {
 
       {/* Capítulos */}
       <div className="flex flex-col items-center space-y-4">
-        <div className="relative flex w-3/4 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+        <div className="relative flex w-full max-w-md bg-gray-200 rounded-full overflow-hidden shadow-inner">
           <div
             className="absolute h-full w-1/4 bg-white rounded-full transition-transform"
             style={{ transform: `translateX(${(capitulo - 1) * 100}%)` }}
@@ -275,7 +269,7 @@ export default function Page() {
 
       {/* Modal */}
       {showModal && (
-        <div className="absolute w-40 h-10 right-16 top-26 bg-white border-2 rounded z-50">
+        <div className="absolute w-40 h-10 right-16 top-16 bg-white border-2 rounded z-50">
           <button className="p-2 hover:bg-gray-300" onClick={() => setDeleteModal(!deleteModal)}>
             Eliminar proyecto
           </button>
