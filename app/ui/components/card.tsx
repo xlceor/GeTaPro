@@ -10,6 +10,7 @@ type Chapter = {
     [sectionKey: string]: {
       name: string;
       text: string;
+      extraFiles:File[]
     };
   };
 
@@ -31,6 +32,7 @@ export default function Card({ userId, projectId, chapterKey, chapter, prevConte
     useEffect(() => {
         setContent(prevContent);
       }, [prevContent]);
+    
 
     console.log("content" + content)
   
@@ -79,7 +81,7 @@ export default function Card({ userId, projectId, chapterKey, chapter, prevConte
           <div className="font-bold text-xl">{section.name}</div>
           <div className="font-semibold text-sm p-2 px-4">{section.text}</div>
           <div className="flex w-full justify-around h-full">
-            <Upload content={content} setContent={setContent} onSave={handleSave} />
+            <Upload content={content} setContent={setContent} onSave={handleSave}/>
           </div>
         </div>
       </div>

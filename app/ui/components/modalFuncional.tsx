@@ -6,22 +6,18 @@ import Placeholder from "@tiptap/extension-placeholder";
 import Heading from "@tiptap/extension-heading";
 import Blockquote from "@tiptap/extension-blockquote";
 import BulletList from "@tiptap/extension-bullet-list";
+import CustomTextStyle from "@/app/extensions/CustomTextStyle"; 
 import Image from "@tiptap/extension-image";
 import Underline from "@tiptap/extension-underline";
 import Strike from "@tiptap/extension-strike";
 import TextAlign from "@tiptap/extension-text-align";
-import CodeBlock from '@tiptap/extension-code-block'
-import CustomTextStyle from "@/app/extensions/CustomTextStyle";
+
+import { FaBold, FaItalic, FaUnderline, FaStrikethrough, FaAlignLeft, FaAlignCenter, FaAlignRight, FaAlignJustify, FaList, FaImage, FaQuoteLeft } from "react-icons/fa";
+import { AiOutlineFileAdd } from "react-icons/ai";
+import { Dispatch, SetStateAction } from "react";
+
 
 import { UseEditorOptions } from "@tiptap/react";
-
-
-import { 
-  FaBold, FaItalic, FaUnderline, FaStrikethrough, FaCode, FaQuoteLeft,
-  FaListUl, FaListOl, FaAlignLeft, FaAlignCenter, FaAlignRight,
-  FaHeading 
-} from "react-icons/fa";
-import { Dispatch, SetStateAction } from "react";
 interface TextContent {
   type: string; 
   text: JSONContent;
@@ -34,18 +30,17 @@ export default function Modal({
   setShowModal
 }: {
   onSave: (newContent: TextContent) => void;
-  content: TextContent;
-  setContent: Dispatch<SetStateAction<TextContent>>;
+  content: { type: string; text: JSONContent };
+  setContent: Dispatch<SetStateAction<{ type: string; text: JSONContent }>>;
   setShowModal:(state:boolean) => void
 }) {
   const editor = useEditor({
     extensions: [
       StarterKit,
+      CustomTextStyle as NonNullable<UseEditorOptions["extensions"]>[number],
       Heading.configure({ levels: [1, 2, 3] }),
       Blockquote,
       BulletList,
-      CustomTextStyle as NonNullable<UseEditorOptions["extensions"]>[number],
-      CodeBlock,
       Placeholder.configure({
         placeholder: "Escribe algo...",
       }),
@@ -97,12 +92,6 @@ export default function Modal({
     editor.chain().insertParagraph().run();
   };
 
-  if (!editor) return <p>Cargando editor...</p>;
-
-  const baseBtnClass = "p-2 w-12 flex justify-center items-center border border-gray-700 rounded hover:bg-gray-300";
-  const getClass = (isActive: boolean) =>
-    `${baseBtnClass} ${isActive ? 'bg-gray-400' : 'bg-gray-100'}`;
-
   return (
     <div className="flex items-center justify-center overflow-y-auto w-full h-[100dvh] m-5">
       <div className="rounded-lg bg-gray-200 overflow-auto p-4 w-full h-[95dvh] flex flex-col items-center">
@@ -110,20 +99,110 @@ export default function Modal({
 
         {/* Barra de herramientas */}
         <div className="flex flex-wrap gap-2 w-2/4 p-3 border-gray-700 border">
-                  <button onClick={() => editor.chain().focus().toggleBold().run()} className={getClass(editor.isActive('bold'))}><FaBold /></button>
-                  <button onClick={() => editor.chain().focus().toggleItalic().run()} className={getClass(editor.isActive('italic'))}><FaItalic /></button>
-                  <button onClick={() => editor.chain().focus().toggleUnderline().run()} className={getClass(editor.isActive('underline'))}><FaUnderline /></button>
-                  <button onClick={() => editor.chain().focus().toggleStrike().run()} className={getClass(editor.isActive('strike'))}><FaStrikethrough /></button>
-                  <button onClick={() => editor.chain().focus().toggleCodeBlock().run()} className={getClass(editor.isActive('codeBlock'))}><FaCode /></button>
-                  <button onClick={() => editor.chain().focus().toggleBlockquote().run()} className={getClass(editor.isActive('blockquote'))}><FaQuoteLeft /></button>
-                  <button onClick={() => editor.chain().focus().toggleBulletList().run()} className={getClass(editor.isActive('bulletList'))}><FaListUl /></button>
-                  <button onClick={() => editor.chain().focus().toggleOrderedList().run()} className={getClass(editor.isActive('orderedList'))}><FaListOl /></button>
-                  <button onClick={() => editor.chain().focus().setTextAlign('left').run()} className={getClass(editor.isActive({ textAlign: 'left' }))}><FaAlignLeft /></button>
-                  <button onClick={() => editor.chain().focus().setTextAlign('center').run()} className={getClass(editor.isActive({ textAlign: 'center' }))}><FaAlignCenter /></button>
-                  <button onClick={() => editor.chain().focus().setTextAlign('right').run()} className={getClass(editor.isActive({ textAlign: 'right' }))}><FaAlignRight /></button>
-                  <button onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()} className={getClass(editor.isActive('heading', { level: 1 }))}><FaHeading /> 1</button>
-                  <button onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()} className={getClass(editor.isActive('heading', { level: 2 }))}><FaHeading /> 2</button>
-                  <button onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()} className={getClass(editor.isActive('heading', { level: 3 }))}><FaHeading /> 3</button>
+          <button
+            className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300"
+            onClick={() => editor?.chain().focus().toggleBold().run()}
+          >
+            <FaBold />
+          </button>
+
+          <button
+            className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300"
+            onClick={() => editor?.chain().focus().toggleItalic().run()}
+          >
+            <FaItalic />
+          </button>
+
+          <button
+            className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300"
+            onClick={() => editor?.chain().focus().toggleUnderline().run()}
+          >
+            <FaUnderline />
+          </button>
+
+          <button
+            className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300"
+            onClick={() => editor?.chain().focus().toggleStrike().run()}
+          >
+            <FaStrikethrough />
+          </button>
+
+          <button
+            className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300"
+            onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
+          >
+            H1
+          </button>
+
+          <button
+            className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300"
+            onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
+          >
+            H2
+          </button>
+
+          <button
+            className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300"
+            onClick={() => editor?.chain().focus().toggleBulletList().run()}
+          >
+            <FaList />
+          </button>
+
+          <button
+            className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300"
+            onClick={() => editor?.chain().focus().toggleBlockquote().run()}
+          >
+            <FaQuoteLeft/>
+          </button>
+
+          <button
+            className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300"
+            onClick={() => {
+              const url = prompt("URL de la imagen:");
+              if (url) {
+                editor?.chain().focus().setImage({ src: url }).run();
+              }
+            }}
+          >
+            <FaImage />
+          </button>
+
+          <button
+            className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300"
+            onClick={() => editor?.chain().focus().setTextAlign('left').run()}
+          >
+            <FaAlignLeft />
+          </button>
+
+          <button
+            className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300"
+            onClick={() => editor?.chain().focus().setTextAlign('center').run()}
+          >
+            <FaAlignCenter />
+          </button>
+
+          <button
+            className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300"
+            onClick={() => editor?.chain().focus().setTextAlign('right').run()}
+          >
+            <FaAlignRight />
+          </button>
+
+          <button
+            className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300"
+            onClick={() => editor?.chain().focus().setTextAlign('justify').run()}
+          >
+            <FaAlignJustify />
+          </button>
+
+          <button
+            className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300"
+            onClick={() => addPage()}
+            title="Agregar salto de página"
+          >
+            <AiOutlineFileAdd />
+          </button>
+
           {/* Selector de Fuente */}
           <select
               className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300"
@@ -154,10 +233,8 @@ export default function Modal({
             ))}
           </select>
         </div>
-        <div className=" w-1/6 h-2/3 justify-center items-center flex md:flex-row flex-col gap-3">
+        <div className=" w-1/6 h-2/3 justify-center items-center flex gap-3">
           <button
-            title="Guardar"
-            disabled={!editor}
             className="px-4 py-2 bg-blue-500 h-14 text-white rounded hover:bg-blue-600"
             onClick={() => {
               if (editor) {
@@ -168,7 +245,6 @@ export default function Modal({
             Guardar
           </button>
           <button
-                title="Cerrar"
                 onClick={() => setShowModal(false)}
                 className="px-4 py-2 bg-red-500 h-14 text-white rounded hover:bg-red-600"
               >
@@ -176,10 +252,8 @@ export default function Modal({
           </button>
           </div>
         </div>
-        <div className="w-full  overflow-scroll h-full px-10 flex p-5 justify-center">
-          <div className="w-[40rem] h-[90vh] bg-white border border-gray-600 shadow rounded p-8">
-            <EditorContent editor={editor} className="prose w-full h-full"  />
-          </div>
+        <div className="w-[816px] h-[1056px] bg-white p-5 shadow overflow-auto">
+          <EditorContent editor={editor} className="prose w-full h-full" />
         </div>
       </div>
     </div>

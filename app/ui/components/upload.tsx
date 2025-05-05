@@ -1,52 +1,70 @@
 "use client";
 import { useState } from "react";
 import Modal from "./modal";
-import { JSONContent } from '@tiptap/react';
+import { JSONContent } from "@tiptap/react";
+import ReactMarkdown from "react-markdown";
+
+function getTextFromJSONContent(json: JSONContent): string {
+  if (!json) return "";
+
+  let text = "";
+
+  if (json.type === "text" && typeof json.text === "string") {
+    text += json.text;
+  }
+
+  if (Array.isArray(json.content)) {
+    for (const node of json.content) {
+      text += getTextFromJSONContent(node);
+    }
+  }
+
+  // Agrega salto de línea después de bloques y aplica formato especial a headings
+  if (json.type === "heading") {
+    text = "\n\n**" + text.toUpperCase() + "**\n";
+  } else if (["paragraph", "blockquote"].includes(json.type || "")) {
+    text += "\n";
+  }
+
+  return text;
+}
 
 interface TextContent {
-  type: "text";
+  type: string; 
   text: JSONContent;
 }
 
-interface upload {
-    content : TextContent;
-    setContent : (content : TextContent) => void;
-    onSave: (newContent: TextContent) => void;
+interface UploadProps {
+  content: TextContent;
+  setContent: (content: TextContent) => void;
+  onSave: (newContent: TextContent) => void;
 }
 
-export default function Upload({content, setContent, onSave} : upload) {
-    const [showModal, setshowModal] = useState(false)
+export default function Upload({ content, setContent, onSave}: UploadProps) {
+  const [showModal, setShowModal] = useState(false);
 
-    console.log("content" + content)
+  const plainText = getTextFromJSONContent(content.text);
+  const previewText = plainText.length > 100 ? plainText.slice(0, 100) + "..." : plainText;
+
+  return (
+    <div className="flex w-full gap-4 h-full">
+      <div
+        className="w-full h-full bg-gray-200 text-gray-500 p-3 rounded-lg overflow-auto cursor-pointer"
+        onClick={() => setShowModal(!showModal)}
+      >
+        <div className="h-full flex items-center justify-center text-center whitespace-pre-wrap font-mono">
 
 
-    return (
-        <div className="flex w-full gap-4 h-full">
-          <div className="w-2/5 flex flex-col justify-center items-center gap-2">
-            <div>Sube un archivo o</div>
-            <button className="p-3 bg-blue-400 w-12 h-12 rounded-lg">^</button>
-          </div>
-          <div
-            className="w-3/5 h-full bg-gray-200 text-gray-500 p-3 rounded-lg overflow-auto cursor-pointer"
-            onClick={() => setshowModal(!showModal)}
-          >
-            <div className="h-full flex items-center justify-center text-center">
-              Haz clic aquí para editar el contenido
-            </div>
-          </div>
-          {showModal && (
-            <div className="fixed inset-0 flex  h-full items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="flex flex-col bg-gray-100 justify-between h-[97%] p-4 rounded-lg shadow-lg w-11/12 max-w-5xl">
-                <Modal content={content} setContent={setContent} onSave={onSave} />
-                <div className="mt-4 text-right">
-                  <button
-                    onClick={() => setshowModal(false)}
-                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                  >
-                    Cerrar
-                  </button>
-                </div>
-            </div>
-        </div>)}
-    </div>)
+          <ReactMarkdown>
+              {previewText || "Haz clic aquí para editar el contenido"}
+          </ReactMarkdown>
+        </div>
+      </div>
+      {showModal && (
+        <div className="fixed inset-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50 z-50">
+            <Modal content={content} setContent={setContent} onSave={onSave} setShowModal={setShowModal} />
+        </div>
+      )}
+    </div>
+  );
 }

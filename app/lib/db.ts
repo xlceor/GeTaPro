@@ -1,38 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
+import {Section, Project} from './types'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// Tipado nuevo para representar el contenido complejo
-type RichTextContent = {
-  type: string;
-  content?: RichTextContent[];
-  attrs?: Record<string, JSON>;
-  marks?: { type: string }[];
-  text?: string;
-};
 
-type Section = {
-  name: string;
-  text: RichTextContent;
-  extraFiles: string[]; // Aquí se pueden agregar archivos específicos por sección
-};
-
-type Project = {
-  id: string;
-  name: string;
-  description: string;
-  files: string[];
-  created_at: string;
-  progress: number;
-  chapter1: Record<string, Section>;
-  chapter2: Record<string, Section>;
-  chapter3: Record<string, Section>;
-  chapter4: Record<string, Section>;
-};
 
 function createEmptySection(name: string): Section {
   return {
@@ -40,8 +15,7 @@ function createEmptySection(name: string): Section {
     text: {
       type: 'doc',
       content: []  // JSON vacío al principio
-    },
-    extraFiles: [] // Sin archivos al principio
+    }
   };
 }
 

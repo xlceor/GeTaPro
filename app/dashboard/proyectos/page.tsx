@@ -6,21 +6,9 @@ import { motion } from 'framer-motion';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useLogged } from '@/app/hooks/useLogged'
+import { Project } from '@/app/lib/types';
 
-type Section = { name: string; text: string };
 
-interface Project {
-  id: string;
-  name: string;
-  description: string;
-  files: string[];
-  created_at: string;
-  progress: number;
-  chapter1: Record<string, Section>;
-  chapter2: Record<string, Section>;
-  chapter3: Record<string, Section>;
-  chapter4: Record<string, Section>;
-}
 
 export default function ProjectsPage() {
   const router = useRouter()
@@ -115,12 +103,12 @@ export default function ProjectsPage() {
                   className="bg-white border rounded-t-xl rounded-lg  shadow hover:shadow-md transition cursor-pointer flex flex-col"
                   onClick={() => router.push(`/dashboard/proyectos/${project.id}`)}
                 >
-                  <div className="bg-gradient-to-r rounded-t-xl from-cyan-600 to-indigo-500 p-4"></div>
+                  <div className="bg-gradient-to-r rounded-t-xl from-cyan-600 to-violet-500 p-4"></div>
                   <div className="bg-white rounded-lg p-6 shadow hover:shadow-md transition cursor-pointer flex flex-col">
                     <h3 className="text-xl font-bold mb-2">{project.name}</h3>
                     <p className="text-gray-600 flex-grow">{project.description}</p>
                     <div className="mt-4  flex justify-end">
-                      <div className="w-16 h-16">
+                      <div className="w-20 h-20 bg-gray-50 rounded shadow-inner p-2">
                         <CircularProgressbar
                           value={project.progress}
                           text={`${project.progress}%`}

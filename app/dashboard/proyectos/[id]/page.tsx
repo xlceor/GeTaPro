@@ -12,23 +12,11 @@ import clsx from 'clsx';
 import { useLogged } from '@/app/hooks/useLogged';
 import Card from '@/app/ui/components/card';
 import { JSONContent } from '@tiptap/react';
+import { Project } from '@/app/lib/types';
 
 type Section = {
   name: string;
   text: JSONContent;
-};
-
-type Project = {
-  id: string;
-  name: string;
-  description: string;
-  files: string[];
-  created_at: string;
-  progress: number;
-  chapter1: Record<string, Section>;
-  chapter2: Record<string, Section>;
-  chapter3: Record<string, Section>;
-  chapter4: Record<string, Section>;
 };
 
 interface ChapterData {
@@ -36,6 +24,7 @@ interface ChapterData {
     [sectionKey: string]: {
       name: string;
       text: string;
+      extraFiles:File[]
     };
   };
 }

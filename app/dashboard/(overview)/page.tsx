@@ -111,12 +111,12 @@ export default function Page() {
                   className="bg-white border rounded-t-xl rounded-lg  shadow hover:shadow-md transition cursor-pointer flex flex-col"
                   onClick={() => router.push(`/dashboard/proyectos/${project.id}`)}
                 >
-                  <div className="bg-gradient-to-r rounded-t-xl from-cyan-600  to-indigo-500 p-4"></div>
+                  <div className="bg-gradient-to-r rounded-t-xl from-cyan-600  to-violet-500 p-4"></div>
                   <div className="bg-white rounded-lg p-6 shadow hover:shadow-md transition cursor-pointer flex flex-col">
                     <h3 className="text-xl font-bold mb-2">{project.name}</h3>
                     <p className="text-gray-600 flex-grow">{project.description}</p>
                     <div className="mt-4  flex justify-end">
-                      <div className="w-16 h-16">
+                      <div className="w-20 h-20 bg-gray-50 rounded shadow-inner p-2">
                         <CircularProgressbar
                           value={project.progress}
                           text={`${project.progress}%`}
@@ -137,10 +137,10 @@ export default function Page() {
           <div className="flex flex-col items-center space-y-4">
             <div className="text-gray-500 text-lg italic">Aún no hay proyectos.</div>
             <button
-              onClick={() => alert('Aquí deberías abrir un modal')}
+              onClick={() => router.push(`/dashboard/proyectos`)}
               className="bg-gray-100 h-48 w-48 rounded-lg border-2 border-dashed border-gray-400 text-6xl text-gray-500 font-bold hover:bg-gray-200 transition"
             >
-              +
+              Ir a Proyectos
             </button>
           </div>
         )}
