@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
 import Modal from "./modal";
 import { JSONContent } from "@tiptap/react";
 import ReactMarkdown from "react-markdown";
@@ -36,7 +36,7 @@ interface TextContent {
 
 interface UploadProps {
   content: TextContent;
-  setContent: (content: TextContent) => void;
+  setContent: Dispatch<SetStateAction<TextContent>>;
   onSave: (newContent: TextContent) => void;
 }
 

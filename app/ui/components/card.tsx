@@ -14,10 +14,10 @@ type Chapter = {
     };
   };
 
-interface TextContent {
-    type: "text";
+  interface TextContent {
+    type: string; 
     text: JSONContent;
-}
+  }
 interface Card {
     userId: string;
     projectId: string;
