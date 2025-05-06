@@ -21,7 +21,6 @@ import {
   FaListUl, FaListOl, FaAlignLeft, FaAlignCenter, FaAlignRight,
   FaHeading 
 } from "react-icons/fa";
-import { AiOutlineFileAdd } from "react-icons/ai";
 
 import { Dispatch, SetStateAction, useState } from "react";
 
