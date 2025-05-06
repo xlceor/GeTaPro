@@ -125,7 +125,6 @@ export default function Modal({
                   <button onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()} className={getClass(editor.isActive('heading', { level: 1 }))}><FaHeading /> 1</button>
                   <button onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()} className={getClass(editor.isActive('heading', { level: 2 }))}><FaHeading /> 2</button>
                   <button onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()} className={getClass(editor.isActive('heading', { level: 3 }))}><FaHeading /> 3</button>
-                  <button className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300" onClick={() => addPage()} title="Agregar salto de página"><AiOutlineFileAdd /></button>
           {/* Selector de Fuente */}
           <select
               className="p-2 bg-gray-100 border-gray-700 border rounded hover:bg-gray-300"
