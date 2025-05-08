@@ -1,10 +1,8 @@
-// page.tsx
 'use client';
 
-import { useSession } from 'next-auth/react';
+import { useSession, signIn, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { useEffect } from 'react';
-import { supabase } from '../lib/supabaseClient'; // Importa el cliente de Supabase
 
 export default function LoginPage() {
   const { data: session } = useSession();
@@ -22,23 +20,6 @@ export default function LoginPage() {
     }
   }, [user]);
 
-  const handleSignIn = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-    });
-
-    if (error) {
-      console.error('Error al iniciar sesión:', error.message);
-    } else {
-      console.log('Usuario autenticado:', data);
-    }
-  };
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    console.log('Sesión cerrada');
-  };
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 text-gray-800 px-4">
       <div className="bg-white border border-gray-200 rounded-2xl shadow-xl p-10 w-full max-w-md text-center transition-all duration-500">
@@ -48,7 +29,7 @@ export default function LoginPage() {
             <p className="text-sm text-gray-500 mb-8">Tu asistente inteligente para proyectos escolares</p>
             <button
               className="bg-violet-600 hover:bg-violet-700 transition-all text-white font-semibold py-3 px-6 rounded-lg w-full shadow-sm hover:shadow-md"
-              onClick={handleSignIn}
+              onClick={() => signIn('google')}
             >
               Iniciar sesión con Google
             </button>
@@ -68,7 +49,7 @@ export default function LoginPage() {
             <p className="mb-6 text-gray-500">Listo para continuar donde lo dejaste</p>
             <button
               className="bg-red-500 hover:bg-red-600 transition-all text-white font-semibold py-3 px-6 rounded-lg w-full shadow-sm hover:shadow-md"
-              onClick={handleSignOut}
+              onClick={() => signOut()}
             >
               Cerrar sesión
             </button>
