@@ -94,7 +94,7 @@ export default function Page() {
         body: JSON.stringify({ projectId: project?.id }),
       });
       const { projects } = await res.json();
-      if (!projects) throw new Error('No se devolvieron proyectos.');
+      if (!projects) console.error('No se devolvieron proyectos.');
       router.push(`/dashboard/proyectos`);
       toast.success('Proyecto eliminado correctamente');
     } catch (error) {

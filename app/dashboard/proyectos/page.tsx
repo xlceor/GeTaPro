@@ -68,7 +68,7 @@ export default function ProjectsPage() {
       const { project } = await res.json()
   
       if (!project?.id) {
-        throw new Error("La API no devolvió un ID válido, algo huele a Hydra.")
+        throw new Error("La API no devolvió un ID válido")
       }
   
       router.push(`/dashboard/proyectos/${project.id}`)
