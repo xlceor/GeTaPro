@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useLogged } from '@/app/hooks/useLogged';
+import { useUser } from '@/app/hooks/useLogged'; // Ajuste el path si es necesario
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Image from 'next/image';
@@ -36,7 +36,8 @@ type Project = {
 };
 
 export default function Page() {
-  const { user } = useLogged();
+  const { user } = useUser();
+  console.log("Usuario-------", user)
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -82,7 +83,7 @@ export default function Page() {
         <div className=" w-full h-4 bg-gradient-to-r p-3 rounded-t-xl from-green-400 via-emerald-600 to-cyan-600"></div>
           <div className=" flex items-center gap-6 p-6 bg-white rounded-lg">
           <Image
-            src={user?.photoUrl || '/default-avatar.png'}
+            src={user?.photoId || '/default-avatar.png'}
             alt="Foto de perfil"
             className="w-20 h-20 rounded-full border shadow"
             width={100}
@@ -134,14 +135,18 @@ export default function Page() {
               ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center space-y-4">
-            <div className="text-gray-500 text-lg italic">Aún no hay proyectos.</div>
-            <button
-              onClick={() => router.push(`/dashboard/proyectos`)}
-              className="bg-gray-100 h-48 w-48 rounded-lg border-2 border-dashed border-gray-400 text-6xl text-gray-500 font-bold hover:bg-gray-200 transition"
-            >
-              Ir a Proyectos
-            </button>
+          <div className="flex flex-col items-center justify-center space-y-4 py-20">
+            <Image
+              src="/waiting-robot.png"
+              alt="Esperando asignación"
+              width={150}
+              height={150}
+              className="opacity-60"
+            />
+            <div className="text-gray-500 text-lg italic text-center">
+              En espera de asignación de proyectos.<br />
+              Por ahora, puedes relajarte... o mejorar tu armadura.
+            </div>
           </div>
         )}
       </section>

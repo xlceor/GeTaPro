@@ -1,48 +1,68 @@
-'use client';
+"use client"
 
-import { useEffect, useState } from 'react';
-import { useSession, signOut } from 'next-auth/react';
 
-type LoggedUser = {
-  id: string;
+import { createContext, useContext, useState, useEffect } from 'react';
+
+type User = {
   name: string;
-  photoUrl: string;
+  username: string;
+  photoId: string;
+  id: number;
+} | null;
+
+type UserContextType = {
+  user: User;
+  login: (userData: NonNullable<User>) => void;
+  logout: () => void;
 };
 
-export function useLogged() {
-  const { data: session } = useSession();
-  const [user, setUser] = useState<LoggedUser | null>(null);
+const UserContext = createContext<UserContextType | undefined>(undefined);
 
+export const UserProvider = ({ children }: { children: React.ReactNode }) => {
+  const [user, setUser] = useState<User>(null);
+
+  // 🧠 Cargar del localStorage al iniciar
   useEffect(() => {
-    const checkUser = async () => {
-      if (session?.user) {
-        const currentUser = session.user;
-        const id = currentUser.id;
-        const name = currentUser.name ?? 'Nombre no disponible';
-        const photoUrl = currentUser.image || '';
-
-        setUser({ id, name, photoUrl });
-
-        const res = await fetch('/api/create-user', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id, name, photoUrl })
-        });
-
-        const { data, error } = await res.json();
-
-        if (data && !error) {
-          console.log('🆕 Usuario registrado en la base de datos.');
-        }
+    const stored = localStorage.getItem('user');
+    console.log('Cargando desde localStorage:', stored);
+    if (stored) {
+      try {
+        setUser(JSON.parse(stored));
+      } catch (err) {
+        console.warn('Datos corruptos en localStorage... como SHIELD en Hydra.', err);
+        localStorage.removeItem('user');
       }
-    };
+    }
+  }, []);
 
-    checkUser();
-  }, [session]);
+  // ✅ Guardar en localStorage cuando el usuario cambie
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }, [user]);
 
-  const handleSignOut = async () => {
-    await signOut({ callbackUrl: '/' });
+  const login = (userData: NonNullable<User>) => {
+    setUser(userData);
+    console.log(userData)
   };
 
-  return { user, handleSignOut };
-}
+  const logout = () => {
+    setUser(null);
+  };
+
+  return (
+    <UserContext.Provider value={{ user, login, logout }}>
+      {children}
+    </UserContext.Provider>
+  );
+};
+
+// 🔧 Hook personalizado
+export const useUser = () => {
+  const context = useContext(UserContext);
+  if (!context) throw new Error('useUser debe usarse dentro de <UserProvider>');
+  return context;
+};

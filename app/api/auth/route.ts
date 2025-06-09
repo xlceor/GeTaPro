@@ -1,7 +1,30 @@
 // app/api/auth/route.ts
 
-import NextAuth from 'next-auth';
-import { authOptions } from '@/app/lib/auth/authOptions';
+import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+  console.log("🔐 Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+console.log("🔐 Supabase KEY:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+export async function POST(req: Request) {
+  const { username, password } = await req.json();
+
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('username', username)
+    .single(); // solo queremos uno
+
+  if (error) {
+    return NextResponse.json({ message: 'Error al consultar Supabase', e: error.message }, { status: 500 });
+  }
+
+  if (data && password === 'admin') {
+    return NextResponse.json({ message: 'Login exitoso', user: data }, { status: 200 });
+  }
+
+  return NextResponse.json({ message: 'Credenciales inválidas' }, { status: 401 });
+}

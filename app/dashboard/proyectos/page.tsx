@@ -29,9 +29,9 @@ export default function ProjectsPage() {
           method: 'POST',
           body: JSON.stringify({ userId: user?.id }),
         });
-  
+
         const result = await res.json();
-  
+
         if (res.ok) {
           setProjects(result.projects);
         } else {
@@ -44,11 +44,17 @@ export default function ProjectsPage() {
         setLoading(false);
       }
     };
-  
+
     if (user?.id) {
       fetchProjects();
     }
   }, [user?.id]);
+
+  useEffect(() => {
+    if (!loading && projects.length >= 1) {
+      router.push(`/dashboard/proyectos/${projects[0].id}`);
+    }
+  }, [loading, projects, router]);
 
   const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault()

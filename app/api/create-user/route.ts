@@ -8,24 +8,29 @@ const supabase = createClient(
 );
 
 export async function POST(req: Request) {
-  const { id, name, photoUrl } = await req.json();
+  const { name, email, username, rol, photo_url } = await req.json();
 
+  // Check if the user already exists by email or username
   const { data: existingUser } = await supabase
     .from('users')
     .select('id')
-    .eq('id', id)
+    .or(`email.eq.${email},username.eq.${username}`)
     .single();
 
   if (existingUser) {
     return NextResponse.json({ message: 'User already exists' }, { status: 200 });
   }
 
-  const { error } = await supabase.from('users').insert({
-    id,
-    name,
-    photoUrl,
-    projects: [] // Puede adaptar esto a su modelo de datos
-  });
+  const { error } = await supabase.from('users').insert([
+    {
+      name,
+      email,
+      username,
+      rol,
+      photo_url,
+      proyect_id: null,
+    }
+  ]);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

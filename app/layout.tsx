@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "@/app/providers";
 import { Toaster } from 'react-hot-toast';
 import { Analytics } from "@vercel/analytics/react"
+import { UserProvider } from "./hooks/useLogged";
 
 import '@/app/ui/globals.css';
 
@@ -32,11 +33,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>
-          {children}
-          <Toaster position="top-right" />
+        <UserProvider>
+          <Providers>
+            {children}
+            <Toaster position="top-right" />
           </Providers>
           <Analytics />
+        </UserProvider>
       </body>
     </html>
   );
