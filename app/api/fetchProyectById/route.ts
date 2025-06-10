@@ -3,7 +3,6 @@ import { createClient } from '@supabase/supabase-js';
 
 // Tipado para el proyecto individual
 type Section = { name: string; text: string };
-console.log("En la base de datooooos")
 
 interface Project {
     id: string;
@@ -19,9 +18,7 @@ interface Project {
   }
 
 // Tipado para el usuario con proyectos
-interface UserData {
-  projects: Project[];
-}
+
 
 // Inicializar Supabase
 const supabase = createClient(
@@ -31,18 +28,17 @@ const supabase = createClient(
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId, projectId }: { userId: string; projectId: string } = await req.json();
-    console.log("Datos recibidos: " + userId + ", " +  projectId)
+    const { userId }: { userId: string;} = await req.json();
 
-    if (!userId || !projectId) {
-      return NextResponse.json({ error: 'Missing userId ord projectId' }, { status: 400 });
+    if (!userId) {
+      return NextResponse.json({ error: 'Missing userId or projectId' }, { status: 400 });
     }
 
     const { data, error } = await supabase
       .from('users')
-      .select('projects')
-      .eq('id', userId)
-      .single<UserData>();
+      .select('proyect_id')
+      .eq('username', userId)
+      .single();
 
     if (error || !data) {
       return NextResponse.json(
@@ -51,16 +47,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const project = data.projects.find((p: Project) => p.id === projectId);
 
+    if (data == null) {
+        return NextResponse.json({ message: 'No projects asigned to user' });
+      }
+    if (data){
+      const { data: projectData, error} = await supabase
+        .from('projects')
+        .select('project')
+        .eq('id', data)
+        .single<Project>();
 
-    if (!project) {
-      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+      if(error){
+        return NextResponse.json({ error: error.message });
+      }
+      if (projectData == null) {
+        return NextResponse.json({ mesage: 'No projects found' });
+      }
+      return NextResponse.json({ project: projectData });
     }
-
-    return NextResponse.json({ project });
   } catch (err: unknown) {
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error'
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

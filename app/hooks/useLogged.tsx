@@ -8,6 +8,8 @@ type User = {
   username: string;
   photoId: string;
   id: number;
+  role:string;
+  project_id:string | null;
 } | null;
 
 type UserContextType = {

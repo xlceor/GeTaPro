@@ -38,6 +38,8 @@ export default function LoginPage() {
           username: form.username,
           photoId: data.user.avatar || 'https://api.dicebear.com/7.x/bottts/png?seed=' + form.username,
           id: data.user.id,
+          role:data.user.role,
+          project_id: data.user.proyect_id,
         });
         console.log(data)
       } else {
