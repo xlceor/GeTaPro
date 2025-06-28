@@ -19,13 +19,15 @@ type Chapter = {
     text: JSONContent;
   }
 interface Card {
-    userId: string;
+    userId: number;
     projectId: string;
     chapterKey: string;
     chapter : Chapter;
     prevContent : TextContent
 }
 export default function Card({ userId, projectId, chapterKey, chapter, prevContent }: Card) {
+
+  console.log(  "sectionKey: " + Object.keys(chapter)[0],)
 
     const [content, setContent] = useState(prevContent);
 

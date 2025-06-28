@@ -18,6 +18,8 @@
     "@tiptap/extension-blockquote": "^2.11.9",
     "@tiptap/extension-bullet-list": "^2.11.9",
     "@tiptap/extension-code-block": "^2.11.9",
+    "@tiptap/extension-collaboration": "^2.23.0",
+    "@tiptap/extension-collaboration-cursor": "^2.23.0",
     "@tiptap/extension-font-family": "^2.11.9",
     "@tiptap/extension-heading": "^2.11.7",
     "@tiptap/extension-image": "^2.11.9",
@@ -50,7 +52,9 @@
     "react-markdown": "^10.1.0",
     "tailwind-scrollbar-hide": "^2.0.0",
     "tiptap-extension-font-size": "^1.2.0",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "y-websocket": "^3.0.0",
+    "yjs": "^13.6.27"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

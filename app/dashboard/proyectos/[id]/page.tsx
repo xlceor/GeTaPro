@@ -9,10 +9,10 @@ import { FaSearch } from 'react-icons/fa';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
-import { useLogged } from '@/app/hooks/useLogged';
+import { useUser } from '@/app/hooks/useLogged';
 import Card from '@/app/ui/components/card';
 import { JSONContent } from '@tiptap/react';
-import { Project } from '@/app/lib/types';
+import { Project2 } from '@/app/lib/types';
 
 type Section = {
   name: string;
@@ -31,10 +31,10 @@ interface ChapterData {
 
 export default function Page() {
   const router = useRouter();
-  const { user } = useLogged();
+  const { user } = useUser();
   const params = useParams();
   const projectId = params?.id;
-  const [project, setProject] = useState<Project | null>(null);
+  const [project, setProject] = useState<Project2 | null>(null);
   const [chapterData, setChapterData] = useState<ChapterData | null>(null);
   const [capitulo, setCapitulo] = useState(1);
   const [showModal, setShowModal] = useState(false);
@@ -66,11 +66,26 @@ export default function Page() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user?.id, projectId }),
       });
-      const { project, error } = await res.json();
-      if (error) {
-        console.error(error);
+    
+      const result = await res.json();
+    
+      if (res.ok) {
+        const projects = result.projects;
+    
+        if (Array.isArray(projects)) {
+          const matchedProject = projects.find((p: Project2) => p.id === projectId);
+          if (matchedProject) {
+            setProject(matchedProject);
+          } else {
+            console.warn('Proyecto no encontrado en la lista, Señor.');
+          }
+        } else if (projects?.id === projectId) {
+          setProject(projects);
+        } else {
+          console.log("No hay proyectos asignados al usuario, Señor.");
+        }
       } else {
-        setProject(project);
+        throw new Error(result.error || 'Error desconocido al obtener el proyecto');
       }
     };
 
@@ -110,6 +125,10 @@ export default function Page() {
     const sections = chapterData[currentKey];
     const info = titles[currentKey as keyof typeof titles];
     const userChapter = project?.[currentKey as keyof Project];
+    console.log(
+      "projectId: " + projectId,
+      "chapterKey: " + currentKey,// Esto debería ser el objeto completo que mencionaste
+    );
 
     return (
       <motion.div

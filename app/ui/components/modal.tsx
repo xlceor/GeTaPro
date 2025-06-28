@@ -12,6 +12,12 @@ import Strike from "@tiptap/extension-strike";
 import TextAlign from "@tiptap/extension-text-align";
 import CodeBlock from '@tiptap/extension-code-block'
 import CustomTextStyle from "@/app/extensions/CustomTextStyle";
+import { useUser } from "@/app/hooks/useLogged";
+
+import Collaboration from '@tiptap/extension-collaboration';
+import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
+import * as Y from 'yjs';
+import { WebsocketProvider } from 'y-websocket';
 
 import { UseEditorOptions } from "@tiptap/react";
 
@@ -30,24 +36,41 @@ interface TextContent {
   text: JSONContent;
 }
 
+
 export default function Modal({
   onSave,
   content,
   setContent,
-  setShowModal
+  setShowModal,
+  sectionKey
 }: {
   onSave: (newContent: TextContent) => void;
   content: TextContent;
   setContent: Dispatch<SetStateAction<TextContent>>;
-  setShowModal:(state:boolean) => void
+  setShowModal:(state:boolean) => void;
+  sectionKey: string;
 }) {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [prevContent, setPrevContent] = useState(content);
 
+  const ydoc = new Y.Doc();
+  const provider = new WebsocketProvider('wss://yjs-server.com', sectionKey, ydoc); // puede usar id del capítulo o subcampo
+
+  const {user} = useUser();
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        history: false,
+      }),
+      Collaboration.configure({ document: ydoc }),
+      CollaborationCursor.configure({
+        provider,
+        user: {
+          name: user?.username,
+          color: '#ffa500',
+        },
+      }),
       Heading.configure({ levels: [1, 2, 3] }),
       Blockquote,
       BulletList,
@@ -187,7 +210,7 @@ export default function Modal({
         <div className="w-2/4"></div>
         <div className="w-full  overflow-scroll h-full px-10 flex p-5 justify-center">
           <div className="w-full h-full">
-            <EditorContent editor={editor} className="prose w-full h-full"  />
+          <EditorContent editor={editor} className="prose w-full h-full editor-content" />
           </div>
         </div>
       </div>
@@ -202,7 +225,7 @@ export default function Modal({
                   <button
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                     onClick={() => {
-                      onSave({ type: "text", text: editor.getJSON() });
+                      onSave({ type: "text", text: ydoc.getText('default').toJSON() });
                       setPrevContent(content)
                       setShowModal(false); // Cierra el modal principal después de guardar
                       setShowConfirmModal(false); // Cierra este modal

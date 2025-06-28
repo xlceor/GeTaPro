@@ -36,3 +36,11 @@ body {
   @apply bg-gradient-to-b from-purple-500 to-blue-600 bg-clip-text text-transparent;
   /* Puede ajustar el tamaño del texto según la necesidad, o agregar text-4xl, text-5xl, etc. */
 }
+/* Estilos para el placeholder */
+.editor-content .ProseMirror p.is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af; /* gris clarito tipo Tailwind gray-400 */
+  pointer-events: none;
+  height: 0;
+}

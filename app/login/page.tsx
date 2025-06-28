@@ -29,6 +29,7 @@ export default function LoginPage() {
       });
   
       const data = await res.json();
+      console.log("dataLogin  --  ",data)
 
       console.log('Respuesta de API:', data);
   
@@ -36,9 +37,9 @@ export default function LoginPage() {
         login({
           name: data.user.name ?? 'Usuario',
           username: form.username,
-          photoId: data.user.avatar || 'https://api.dicebear.com/7.x/bottts/png?seed=' + form.username,
+          photoId: data.user.photo_url || 'https://api.dicebear.com/7.x/bottts/png?seed=' + form.username,
           id: data.user.id,
-          role:data.user.role,
+          role:data.user.rol,
           project_id: data.user.proyect_id,
         });
         console.log(data)

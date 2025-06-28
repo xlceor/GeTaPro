@@ -6,12 +6,19 @@ import { useUser } from '@/app/hooks/useLogged';
 import Image from 'next/image';
 import { useState } from 'react';
 import clsx from 'clsx';
+import { useRouter } from 'next/navigation';
 
 
 export default function SideNav({ children }: { children: React.ReactNode }) {
   const { user, logout } = useUser();
   console.log(user)
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter()
+
+  const handleLogout = () =>{
+      logout()
+      router.push('/login')
+  } 
 
   return (
     <div className="flex relative flex-col w-full min-h-screen">
@@ -50,8 +57,8 @@ export default function SideNav({ children }: { children: React.ReactNode }) {
           >
           <div className="flex flex-col h-full justify-between space-y-4">
             <NavLinks />
-            <button
-              onClick={logout}
+    <button
+              onClick={handleLogout}
               className="flex h-[48px] w-full items-center justify-center gap-2 rounded-md p-3 text-sm font-medium hover:bg-violet-400 hover:text-white"
             >
         {user && (
@@ -64,7 +71,7 @@ export default function SideNav({ children }: { children: React.ReactNode }) {
           />
         )}
         <span>Cerrar sesión</span>
-      </button>
+    </button>
           </div>
         </div>
 

@@ -18,10 +18,11 @@ export async function POST(req: Request) {
     .eq('username', username)
     .single(); // solo queremos uno
 
+
   if (error) {
     return NextResponse.json({ message: 'Error al consultar Supabase', e: error.message }, { status: 500 });
   }
-
+  console.log("dataAuth  --", data);
   if (data && password === 'admin') {
     return NextResponse.json({ message: 'Login exitoso', user: data }, { status: 200 });
   }

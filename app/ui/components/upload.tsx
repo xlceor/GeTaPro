@@ -38,9 +38,10 @@ interface UploadProps {
   content: TextContent;
   setContent: Dispatch<SetStateAction<TextContent>>;
   onSave: (newContent: TextContent) => void;
+  sectionKey: string;
 }
 
-export default function Upload({ content, setContent, onSave}: UploadProps) {
+export default function Upload({ content, setContent, onSave, sectionKey}: UploadProps) {
   const [showModal, setShowModal] = useState(false);
 
   const plainText = getTextFromJSONContent(content.text);
@@ -62,7 +63,7 @@ export default function Upload({ content, setContent, onSave}: UploadProps) {
       </div>
       {showModal && (
         <div className="fixed inset-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50 z-50">
-            <Modal content={content} setContent={setContent} onSave={onSave} setShowModal={setShowModal} />
+            <Modal content={content} setContent={setContent} onSave={onSave} setShowModal={setShowModal} sectionKey={sectionKey} />
         </div>
       )}
     </div>

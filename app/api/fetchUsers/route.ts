@@ -12,16 +12,19 @@ const supabase = createClient(
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId }: { userId: string;} = await req.json();
+    const { userId, role }: { userId: string; role: string } = await req.json();
 
     if (!userId) {
       return NextResponse.json({ error: 'Missing userId or projectId' }, { status: 400 });
     }
 
+    if (role != "asesor"){
+        return NextResponse.json({ error: 'No tiene permisos para acceder a este proyecto' }, { status: 403 });
+    }
+
     const { data, error } = await supabase
-      .from('projects')
+      .from('users')
       .select('*')
-      .eq('advisor', userId)
 
     if (error || !data) {
       return NextResponse.json(
@@ -30,7 +33,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    return NextResponse.json({ projects: data }, { status: 200 });
+    return NextResponse.json({ users: data }, { status: 200 });
 
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : 'Unknown error'

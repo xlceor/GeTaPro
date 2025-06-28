@@ -2,15 +2,7 @@
 
 
 import { createContext, useContext, useState, useEffect } from 'react';
-
-type User = {
-  name: string;
-  username: string;
-  photoId: string;
-  id: number;
-  role:string;
-  project_id:string | null;
-} | null;
+import { User } from '@/app/lib/types'
 
 type UserContextType = {
   user: User;
@@ -40,6 +32,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   // ✅ Guardar en localStorage cuando el usuario cambie
   useEffect(() => {
     if (user) {
+      console.log('Guardando en localStorage:', user);
       localStorage.setItem('user', JSON.stringify(user));
     } else {
       localStorage.removeItem('user');
@@ -48,7 +41,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = (userData: NonNullable<User>) => {
     setUser(userData);
-    console.log(userData)
+    console.log("userData ", userData)
   };
 
   const logout = () => {
@@ -66,5 +59,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) throw new Error('useUser debe usarse dentro de <UserProvider>');
+  console.log("useUser ", context)
   return context;
 };

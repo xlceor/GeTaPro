@@ -44,15 +44,25 @@ export default function Page() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const res = await fetch('/api/fetchProyects', {
+        const res = await fetch('/api/fetchProyectById', {
           method: 'POST',
-          body: JSON.stringify({ userId: user?.username }),
+          body: JSON.stringify({ userId: user?.id }),
         });
 
         const result = await res.json();
 
+        console.log("Respuesta de la api: ",result);
+
         if (res.ok) {
-          setProjects(result.projects);
+          if (result.projects) {
+            if (user?.role === 'asesor') {
+              setProjects(result.projects)
+            } else {
+              setProjects(result.projects.length > 0 ? [result.projects[0]] : [])
+            }
+          }
+
+          else console.log("no projects asigned to user")
         } else {
           throw new Error(result.error);
         }
@@ -69,8 +79,10 @@ export default function Page() {
     }
   }, [user?.username]);
 
+  console.log(user)
+
   return (
-    <div className="p-6 space-y-8">
+    <div className="w-full space-y-8">
 
             {/* Tarjeta de bienvenida */}
       <motion.section
@@ -138,8 +150,8 @@ export default function Page() {
       <Image
         src="/waiting-robot.png"
         alt="Esperando asignación"
-        width={150}
-        height={150}
+        width={250}
+        height={200}
         className="opacity-60"
       />
       <div className="text-gray-500 text-lg italic text-center">
