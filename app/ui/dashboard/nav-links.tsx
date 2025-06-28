@@ -21,13 +21,6 @@ const links = [
   { name: 'Asistente', href: '/dashboard/asistant', icon: UserGroupIcon },
 ];
 
-// Chapters array for the dropdown
-const chapters = [
-  { name: 'Capítulo 1', href: '/dashboard/proyectos/123/capitulo/1' },
-  { name: 'Capítulo 2', href: '/dashboard/proyectos/123/capitulo/2' },
-  { name: 'Capítulo 3', href: '/dashboard/proyectos/123/capitulo/3' },
-  { name: 'Capítulo 4', href: '/dashboard/proyectos/123/capitulo/4' },
-];
 
 export default function NavLinks() {
   const pathname = usePathname();
@@ -41,20 +34,6 @@ export default function NavLinks() {
           </div>
         </summary>
         <div className="flex flex-col pl-4">
-          {chapters.map((chapter) => (
-            <Link
-              key={chapter.name}
-              href={chapter.href}
-              className={clsx(
-                'flex h-[44px] items-center rounded-md text-sm font-medium px-2 hover:bg-slate-100 hover:text-violet-600',
-                {
-                  'bg-slate-100 text-violet-600 shadow': pathname === chapter.href,
-                },
-              )}
-            >
-              {chapter.name}
-            </Link>
-          ))}
         </div>
       </details>
       {links.map((link) => {
