@@ -124,10 +124,10 @@ export default function Page() {
     const currentKey = Object.keys(chapterData)[capitulo - 1];
     const sections = chapterData[currentKey];
     const info = titles[currentKey as keyof typeof titles];
-    const userChapter = project?.[currentKey as keyof Project];
+    const userChapter = project?.[currentKey as keyof Project2];
     console.log(
       "projectId: " + projectId,
-      "chapterKey: " + currentKey,// Esto debería ser el objeto completo que mencionaste
+      "chapterKey: " + currentKey,
     );
 
     return (
