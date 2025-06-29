@@ -26,16 +26,6 @@ export default function NavLinks() {
   const pathname = usePathname();
   return (
     <div className='flex flex-col h-1/3 justify-between'>
-            <details className="mt-2">
-        <summary className="cursor-pointer flex px-4 py-2 rounded-md text-sm font-medium hover:bg-slate-100 hover:text-violet-600 text-gray-700 select-none">
-          <div className='flex items-center gap-2  justify-center '>
-            <DocumentDuplicateIcon className='w-6'/>
-            Proyecto
-          </div>
-        </summary>
-        <div className="flex flex-col pl-4">
-        </div>
-      </details>
       {links.map((link) => {
         const LinkIcon = link.icon;
         return (

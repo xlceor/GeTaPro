@@ -225,7 +225,7 @@ export default function Modal({
                   <button
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                     onClick={() => {
-                      onSave({ type: "text", text: ydoc.getText('default').toJSON() });
+                      onSave({ type: "text", text: editor.getJSON() });
                       setPrevContent(content)
                       setShowModal(false); // Cierra el modal principal después de guardar
                       setShowConfirmModal(false); // Cierra este modal
