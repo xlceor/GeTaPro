@@ -41,7 +41,7 @@ interface UploadProps {
   sectionKey: string;
 }
 
-export default function Upload({ content, setContent, onSave, sectionKey}: UploadProps) {
+export default function Upload({ content, setContent, onSave}: UploadProps) {
   const [showModal, setShowModal] = useState(false);
 
   const plainText = getTextFromJSONContent(content.text);
@@ -63,7 +63,7 @@ export default function Upload({ content, setContent, onSave, sectionKey}: Uploa
       </div>
       {showModal && (
         <div className="fixed inset-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50 z-50">
-            <Modal content={content} setContent={setContent} onSave={onSave} setShowModal={setShowModal} sectionKey={sectionKey} />
+            <Modal content={content} setContent={setContent} onSave={onSave} setShowModal={setShowModal} />
         </div>
       )}
     </div>
